@@ -18,7 +18,7 @@ MongoWrapper.prototype.connect = function(){
 };
 
 MongoWrapper.prototype._onConnectionOpened = function() {
-  var subscriptionSchema = this.mongoose.Schema( require('subscription_schema.json') );
+  var subscriptionSchema = this.mongoose.Schema( require('./subscription_schema.json') );
   this.Subscription = this.mongoose.model('Subscription', subscriptionSchema);
 };
 
