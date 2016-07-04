@@ -115,10 +115,13 @@
       },
 
       syncToServer: function subscription(){
-        if ( this._syncTimeout ) {
-          clearTimeout( this._syncTimeout );
-        } 
-        this._syncTimeout = setTimeout( this._doSync.bind( this ), 2000 );
+        // If there's no subscription, the server won't do anything meaningful anyway.
+        if ( this.prevSubscription ) {
+          if ( this._syncTimeout ) {
+            clearTimeout( this._syncTimeout );
+          } 
+          this._syncTimeout = setTimeout( this._doSync.bind( this ), 2000 );
+        }
       },
 
       _doSync: function _doSync(){
