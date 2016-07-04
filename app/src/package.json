@@ -20,8 +20,10 @@
     "gulp-style-modules": "^0.1.0",
     "gulp-vulcanize": "^6.1.0",
     "merge-stream": "^1.0.0",
+    "mlb.js": "kennyjackelen/mlbjs",
     "mongoose": "^4.5.3",
     "run-sequence": "^1.2.2",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "winprob": "kennyjackelen/winprob"
   }
 }
