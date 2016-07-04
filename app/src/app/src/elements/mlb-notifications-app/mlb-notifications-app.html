@@ -1,4 +1,5 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../../../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../../../../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
@@ -35,6 +36,7 @@
                                  on-platinum-push-messaging-error="_pushError"
                                  on-enabled-changed="_adjustToggleToMatch"
                                  on-subscription-changed="_pushSubscriptionChanged"></platinum-push-messaging>
+        <paper-toast id="syncToast" text="Settings saved!"></paper-toast>
       </section>
 
       <div class="credit">
@@ -113,6 +115,13 @@
       },
 
       syncToServer: function subscription(){
+        if ( this._syncTimeout ) {
+          clearTimeout( this._syncTimeout );
+        } 
+        this._syncTimeout = setTimeout( this._doSync.bind( this ), 2000 );
+      },
+
+      _doSync: function _doSync(){
         var xhr = new XMLHttpRequest();
         var payload = {};
 
@@ -127,6 +136,7 @@
         xhr.send( JSON.stringify( payload ) );
 
         console.log( 'Payload to server: ', payload );
+        this.$.syncToast.open();
       }
 
     });
