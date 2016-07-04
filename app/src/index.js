@@ -3,6 +3,7 @@
 
 var express = require('express');
 var path = require('path');
+var fork = require('child').fork;
 var bodyParser = require("body-parser");
 var PORT = process.env.PORT || 8080;
 
@@ -21,3 +22,5 @@ app.use( express.static( path.resolve( __dirname, 'app/dist') ) );
 
 // go baby go!
 app.listen( PORT );
+
+fork('./lib/gameday.js');

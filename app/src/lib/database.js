@@ -36,4 +36,8 @@ MongoWrapper.prototype.remove = function( subscriptionID, callback ) {
     callback );
 };
 
+MongoWrapper.prototype.find = function( options, callback ) {
+  this.Subscription.find( options, callback );
+};
+
 module.exports = new MongoWrapper();
