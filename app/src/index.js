@@ -10,6 +10,8 @@ var app = express();
 app.use( bodyParser.json() );
 var router = express.Router();
 
+app.locals.database = require('./lib/database.js');
+
 // set up routes
 require('./routes')( router );
 app.use( '/', router );
