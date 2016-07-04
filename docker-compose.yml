@@ -1,0 +1,11 @@
+app:
+  build: app
+  ports:
+   - "49270:8080"
+  links:
+    - db
+  env_file: app/src/app.env
+db:
+  image: mongo:3.0.2
+  ports:
+   - "27017:27017"

@@ -1,0 +1,107 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../../../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+<link rel="import" href="../../../../bower_components/platinum-push-messaging/platinum-push-messaging.html">
+<link rel="import" href="mlb-notifications-app-styles.html">
+
+<link rel="import" href="../notification-settings/notification-settings.html">
+<link rel="import" href="../shared-styles/shared-styles.html">
+
+<dom-module id="mlb-notifications-app">
+
+  <template>
+    <style include="shared-styles"></style>
+    <style include="mlb-notifications-app-styles"></style>
+
+    <!-- Main content -->
+    <app-header-layout>
+
+      <app-header condenses reveals effects="waterfall">
+        <app-toolbar>
+          <div title>
+            <img class="app-icon" src="/images/app-icon.svg"></img>
+            MLB Notifications
+          </div>
+        </app-toolbar>
+      </app-header>
+
+      <section class="main card">
+        <notification-settings settings="{{settings}}"
+                               on-toggle-notifications="_toggleNotifications"
+                               on-test-notification="_testNotification"></notification-settings>
+        <app-localstorage-document key="twins-settings" data="{{settings}}"></app-localstorage-document>
+        <platinum-push-messaging id="ppm"
+                                 on-platinum-push-messaging-error="_pushError"
+                                 on-enabled-changed="_adjustToggleToMatch"
+                                 on-subscription-changed="_pushSubscriptionChanged"></platinum-push-messaging>
+      </section>
+
+      <div class="credit">
+        Icons made by <a href="http://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>.
+        MLB scores and game events used in accordance with their <a href="http://gdx.mlb.com/components/copyright.txt">terms</a>.
+      </div>
+    </app-header-layout>
+
+  </template>
+
+  <script>
+    (function(){
+    /* global Polymer:true */
+    'use strict';
+
+    Polymer({
+
+      is: 'mlb-notifications-app',
+
+      properties: {
+
+      },
+
+      observers: [
+      
+      ],
+
+      ready: function ready() {
+        // We have to do this because the "supported" property on platinum-push-messaging
+        // does not use two-way binding.
+        this.$$('notification-settings').pushSupported = this.$.ppm.supported;
+      },
+
+      _adjustToggleToMatch: function _adjustToggleToMatch() {
+        console.log('push enabled changed: ' + this.$.ppm.enabled);
+        this.set('settings.turnedOn', this.$.ppm.enabled );
+      },
+
+      _pushSubscriptionChanged: function _pushSubscriptionChanged() {
+        console.log('subscription', this.$.ppm.subscription);
+      },
+
+      _testNotification: function _testNotification() {
+        this.$.ppm.testPush('Testing!');
+      },
+
+      _toggleNotifications: function _toggleNotifications( event ) {
+        if ( event.detail.turnedOn ) {
+          // Notifications were just turned on, so let's request to enable push messaging
+          if ( !this.$.ppm.enabled ) {
+            this.$.ppm.enable().then( this._adjustToggleToMatch.bind( this ) );
+          }
+        }
+        else {
+          // Notifications were just turned off, so let's request to disable push messaging
+          this.$.ppm.disable().then( this._adjustToggleToMatch.bind( this ) );  // returns a Promise, we're just not using it
+        }
+      },
+
+      _pushError: function _pushError( error ) {
+        this.$$('notification-settings').errorMessage = error.detail;
+      }
+
+    });
+
+    })();
+
+  </script>
+
+</dom-module>

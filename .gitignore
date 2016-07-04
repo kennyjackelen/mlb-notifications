@@ -1,0 +1,5 @@
+app/src/bower_components
+app/src/node_modules
+app/src/app/build
+app/src/app/dist
+app/src/app.env

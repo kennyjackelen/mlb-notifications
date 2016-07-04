@@ -1,0 +1,56 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="team-settings-division">
+
+  <template>
+    <style include="shared-styles"></style>
+
+    <style>
+      :host {
+
+      }
+    </style>
+    <template id="repeater" is="dom-repeat" items="{{teams}}" as="team">
+      <div class="card" on-tap="_onTileClicked">
+        {{ team.short_name }}
+      </div>
+    </template>
+
+  </template>
+
+  <script>
+    (function(){
+    /* global Polymer:true */
+    'use strict';
+    Polymer({
+
+      is: 'team-settings-division',
+
+      properties: {
+
+        teams: {
+          type: Array,
+          notify: false
+        }
+
+      },
+
+      _onTileClicked: function _onTileClicked( event ) {
+        var target = event.target;
+        var sourceEvent = event.detail.sourceEvent;
+        this.fire('tile-click', {
+          tile: target,
+          data: event.model.team,
+          x: sourceEvent.x || sourceEvent.pageX,
+          y: sourceEvent.y || sourceEvent.pageY
+        });
+      }
+
+    });
+
+  })();
+
+  </script>
+
+</dom-module>

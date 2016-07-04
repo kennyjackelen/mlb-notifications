@@ -1,0 +1,15 @@
+{
+    "subscriptionID": "String",
+    "settings": {
+      "turnedOn": "Boolean",
+      "gameStart": "Boolean",
+      "halfInning": "Boolean",
+      "gameEnd": "Boolean",
+      "runScored": "Boolean",
+      "leadChange": "Boolean",
+      "homeRun": "Boolean",
+      "highLeverage": "Boolean",
+      "bigWinprobChange": "Boolean",
+      "noHitter": "Boolean"
+    }
+}

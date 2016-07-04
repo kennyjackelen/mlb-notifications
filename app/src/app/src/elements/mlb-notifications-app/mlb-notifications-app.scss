@@ -1,0 +1,39 @@
+:host {
+  display: block;
+  --app-primary-color: #042462; /* twins blue*/
+  --app-secondary-color: #D31145; /* twins red */
+  --primary-color: #042462; /* twins blue*/
+  --primary-text-color: #212121;
+}
+
+app-header-layout {
+  min-height: 100vh;
+}
+
+app-header {
+  background-color: var(--app-primary-color);
+  color: #fff;
+}
+
+.app-icon {
+  height: 1.75em;
+  vertical-align: middle;
+  margin-top: -0.25em;
+  margin-right: 0.75em;
+}
+
+section.main {
+  padding: 1em;
+  margin: 1em;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.credit {
+  text-align: center;
+  font-size: 0.6em;
+  margin: 1em;
+}
+.credit a {
+  color: #000;
+}

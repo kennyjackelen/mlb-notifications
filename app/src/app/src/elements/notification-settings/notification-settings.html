@@ -1,0 +1,147 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../shared-styles/shared-styles.html">
+<link rel="import" href="notification-settings-styles.html">
+
+<dom-module id="notification-settings">
+
+  <template>
+    <style include="shared-styles"></style>
+    <style include="notification-settings-styles"></style>
+
+    <paper-toggle-button checked="{{settings.turnedOn}}"
+                         disabled="{{!pushSupported}}"
+                         on-change="_toggleNotifications">
+      Notifications Are Turned <span hidden="{{!settings.turnedOn}}">On</span><span hidden="{{settings.turnedOn}}">Off</span>
+      <span class="subtitle" id="unsupported" hidden="{{pushSupported}}">
+        Your browser does not support push notifications.
+      </span>
+      <span class="subtitle">
+        {{errorMessage}}
+      </span>
+    </paper-toggle-button>
+    
+    <h2>Game Progress</h2>
+    <ul class="option-list">
+      <li>
+        <paper-checkbox id="game-start" checked="{{settings.gameStart}}" disabled="{{!settings.turnedOn}}">
+          When the game begins
+        </paper-checkbox>
+      </li>
+      <li>
+        <paper-checkbox id="half-inning" checked="{{settings.halfInning}}" disabled="{{!settings.turnedOn}}">
+          At the end of each half inning
+        </paper-checkbox>
+      </li>
+      <li>
+        <paper-checkbox id="game-end" checked="{{settings.gameEnd}}" disabled="{{!settings.turnedOn}}">
+          When the game ends
+        </paper-checkbox>
+      </li>
+    </ul>
+    <h2>Scoring Plays</h2>
+    <ul class="option-list">
+      <li>
+        <paper-checkbox id="run-scored" checked="{{settings.runScored}}" disabled="{{!settings.turnedOn}}">
+          When a run scores
+        </paper-checkbox>
+      </li>
+      <li>
+        <paper-checkbox id="lead-change" checked="{{settings.leadChange}}" disabled="{{!settings.turnedOn}}">
+          When a lead change takes place
+        </paper-checkbox>
+      </li>
+    </ul>
+    <h2>Big Moments</h2>
+    <ul class="option-list">
+      <li>
+        <paper-checkbox id="home-run" checked="{{settings.homeRun}}" disabled="{{!settings.turnedOn}}">
+          Home runs
+        </paper-checkbox>
+      </li>
+      <li>
+        <paper-checkbox id="high-leverage" checked="{{settings.highLeverage}}" disabled="{{!settings.turnedOn}}">
+          High-leverage situations
+          <span class="subtitle">
+            When the current at-bat is likely to be crucial to the game's outcome
+          </span>
+        </paper-checkbox>
+      </li>
+      <li>
+        <paper-checkbox id="big-winprob-change" checked="{{settings.bigWinprobChange}}" disabled="{{!settings.turnedOn}}">
+          Big plays
+          <span class="subtitle">
+            After a play that changed the team's win probability by at least 20%
+          </span>
+        </paper-checkbox>
+      </li>
+      <li>
+        <paper-checkbox id="no-hitter" checked="{{settings.noHitter}}" disabled="{{!settings.turnedOn}}">
+          No-hitters
+          <span class="subtitle">
+            When a pitcher has a no-hitter through 7 innings
+          </span>
+        </paper-checkbox>
+      </li>
+    </ul>
+    <paper-button raised on-tap="_testNotification"
+                         disabled="{{!settings.turnedOn}}">
+       Send a test notification
+    </paper-button>
+  </template>
+
+  <script>
+    (function(){
+    /* global Polymer:true */
+    'use strict';
+    Polymer({
+
+      is: 'notification-settings',
+
+      properties: {
+        settings: {
+          type: Object,
+          notify: true,
+          observer: '_settingsChanged',
+          value: function() { return {}; }
+        },
+        pushSupported: {
+          type: Boolean,
+          observer: '_pushSupportChanged'
+        },
+        errorMessage: {
+          type: String
+        }
+      },
+
+      _pushSupportChanged: function _pushSupportChanged( newValue ){
+        if ( !newValue ) {
+          // Push is NOT supported, so turn off the toggle so this is clear to ths user.
+          this.set( 'settings.turnedOn', false );
+        }
+      },
+
+      _settingsChanged: function _settingsChanged(){
+        if ( !this.pushSupported ) {
+          // Push is NOT supported, so turn off the toggle so this is clear to ths user.
+          this.set( 'settings.turnedOn', false );
+        }
+      },
+
+      _testNotification: function _testNotification(){
+        this.fire('test-notification');
+      },
+
+      _toggleNotifications: function _toggleNotifications(){
+        this.fire('toggle-notifications', { turnedOn: this.settings.turnedOn } );
+      }
+
+    });
+
+  })();
+
+  </script>
+
+</dom-module>

@@ -1,0 +1,92 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
+<link rel="import" href="team-settings-division.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="team-settings-grid">
+
+  <template>
+    <style include="shared-styles"></style>
+
+    <style>
+      :host {
+
+      }
+    </style>
+
+    <div class="league">
+      <team-settings-division teams="{{teams.AL.West}}"
+                              on-tile-click="_onTileClicked"></team-settings-division>
+      <team-settings-division teams="{{teams.AL.Central}}"
+                              on-tile-click="_onTileClicked"></team-settings-division>
+      <team-settings-division teams="{{teams.AL.East}}"
+                              on-tile-click="_onTileClicked"></team-settings-division>
+    </div>
+
+    <div class="league">
+      <team-settings-division teams="{{teams.NL.West}}"
+                              on-tile-click="_onTileClicked"></team-settings-division>
+      <team-settings-division teams="{{teams.NL.Central}}"
+                              on-tile-click="_onTileClicked"></team-settings-division>
+      <team-settings-division teams="{{teams.NL.East}}"
+                              on-tile-click="_onTileClicked"></team-settings-division>
+    </div>
+
+  </template>
+
+  <script>
+    (function(){
+    /* global Polymer:true */
+    'use strict';
+    Polymer({
+
+      is: 'team-settings-grid',
+
+      behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior
+      ],
+
+      properties: {
+
+        teams: {
+          type: Array,
+          notify: false
+        },
+
+        animationConfig: {
+          type: Object,
+          value: function() {
+            return {
+              'exit': [{
+                name: 'hero-animation',
+                id: 'hero',
+                fromPage: this
+              }]
+            };
+          }
+        }
+
+      },
+
+      _onTileClicked: function _onTileClicked( event ) {
+        var target = event.target;
+        this.sharedElements = {
+          'hero': target,
+        };
+        this.animationConfig.exit[ 0 ].gesture = {
+          x: event.detail.x,
+          y: event.detail.y
+        };
+        this.fire('tile-click', {
+          tile: event.detail.tile,
+          data: event.detail.data
+        });
+      }
+
+    });
+
+  })();
+
+  </script>
+
+</dom-module>
