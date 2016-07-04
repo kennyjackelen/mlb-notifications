@@ -59,7 +59,7 @@
       },
 
       observers: [
-      
+        'settingsChanged(settings.*)'
       ],
 
       ready: function ready() {
@@ -74,7 +74,17 @@
       },
 
       _pushSubscriptionChanged: function _pushSubscriptionChanged() {
-        console.log('subscription', this.$.ppm.subscription);
+        var subscription;
+        try {
+          subscription = this.$.ppm.subscription.endpoint;
+        }
+        catch ( e ) {
+          subscription = null;
+        }
+        if ( subscription ) {
+          this.prevSubscription = subscription;
+        }
+        this.syncToServer();
       },
 
       _testNotification: function _testNotification() {
@@ -96,6 +106,27 @@
 
       _pushError: function _pushError( error ) {
         this.$$('notification-settings').errorMessage = error.detail;
+      },
+
+      settingsChanged: function settingsChanged() {
+        this.syncToServer();
+      },
+
+      syncToServer: function subscription(){
+        var xhr = new XMLHttpRequest();
+        var payload = {};
+
+        payload.subscriptionID = this.prevSubscription;
+        payload.settings = this.settings;
+
+        xhr.open('POST', './subscription_change');
+        xhr.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
+        xhr.onerror = function() {
+          console.log('Couldn\'t send subscription to server.');
+        };
+        xhr.send( JSON.stringify( payload ) );
+
+        console.log( 'Payload to server: ', payload );
       }
 
     });
