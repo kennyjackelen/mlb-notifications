@@ -13,12 +13,6 @@ var twinsGame = {};
 function getTwinsGame() {
   return new Promise( 
     function( resolve, reject ) {
-
-      // start debug
-      resolve( '/components/game/mlb/year_2016/month_07/day_04/gid_2016_07_04_kcamlb_tormlb_1' );
-      return;
-      //end debug
-
       var date = new Date();
       if ( date === twinsGame.date ) {
         resolve( twinsGame.game_data_directory );
@@ -55,7 +49,7 @@ function getNewPlays( game_data_directory ) {
             reject( err );
             return;
           }
-          console.log( 'got game events: ' + events.length );
+          console.log( 'got game events: ' + game_data_directory + ' ' + events.length );
           for ( var i = 0; i < events.length; i++ ) {
             if ( i > 0 ) {
               digestOnePlay( events[ i ], events[ i - 1 ] );
