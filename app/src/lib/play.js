@@ -8,76 +8,99 @@ var Play = function( currentPlay, previousPlay ){
   this.previousPlay = previousPlay;
 };
 
-Play.prototype.getCriteria = function() {
-  return { $or: [
-    { gameStart: this.gameStart() },
-    { halfInning: this.halfInning() },
-    { gameEnd: this.gameEnd() },
-    { runScored: this.runScored() },
-    { leadChange: this.leadChange() },
-    { homeRun: this.homeRun() },
-    { highLeverage: this.highLeverage() },
-    { bigWinprobChange: this.bigWinprobChange() },
-    { noHitter: this.noHitter() }
-  ] };
-};
+Play.prototype.getConditions = function() {
 
-Play.prototype.gameStart = function() {
-  return ( this.currentPlay !== null && this.previousPlay === null );
-};
-
-Play.prototype.halfInning = function() {
-  return ( this.currentPlay.o === '3' );
-};
-
-Play.prototype.gameEnd = function() {
-  /* TODO: Not implemented.  Not enough data in just the plays to get this. */
-  return false;
-};
-
-Play.prototype.runScored = function() {
-  if ( this.gameStarted() ) { 
-    if ( this.currentPlay.away_team_runs !== "0" )  {
-      // Game just started but leadoff batter homered.
-      return true;
+  var condition;
+  var conditions = { $or: [] };
+  for ( var i = 0; i < this.criteria.length; i++ ) {
+    var criterion = this.criteria[ i ];
+    if ( criterion.test() ) {
+      condition = {};
+      condition[ criterion.name ] = true;
+      conditions.$or.push( condition );
     }
-    return false;
   }
-  return ( this.currentPlay.away_team_runs !== this.previousPlay.away_team_runs ) ||
-         ( this.currentPlay.home_team_runs !== this.previousPlay.home_team_runs );
+  return conditions;
 };
 
-Play.prototype.leadChange = function() {
-  if ( this.gameStarted() ) { 
-    if ( this.currentPlay.away_team_runs !== "0" )  {
-      // Game just started but leadoff batter homered.
-      return true;
-    }
-    return false;
+Play.prototype.criteria = [
+  {
+    name: 'gameStart',
+    test: function() {
+            return ( this.currentPlay !== null && this.previousPlay === null );
+          }
+  },
+  {
+    name: 'halfInning',
+    test: function() {
+            return ( this.currentPlay.o === '3' );
+          }
+  },
+  {
+    name: 'gameEnd',
+    test: function() {
+            /* TODO: Not implemented.  Not enough data in just the plays to get this. */
+            return false;
+          }
+  },
+  {
+    name: 'runScored',
+    test: function() {
+            if ( this.gameStarted() ) { 
+              if ( this.currentPlay.away_team_runs !== "0" )  {
+                // Game just started but leadoff batter homered.
+                return true;
+              }
+              return false;
+            }
+            return ( this.currentPlay.away_team_runs !== this.previousPlay.away_team_runs ) ||
+                   ( this.currentPlay.home_team_runs !== this.previousPlay.home_team_runs );
+          }
+  },
+  {
+    name: 'leadChange',
+    test: function() {
+            if ( this.gameStarted() ) { 
+              if ( this.currentPlay.away_team_runs !== "0" )  {
+                // Game just started but leadoff batter homered.
+                return true;
+              }
+              return false;
+            }
+
+            return ( this.currentPlay.away_team_runs !== this.previousPlay.away_team_runs ) ||
+                   ( this.currentPlay.home_team_runs !== this.previousPlay.home_team_runs );
+          }
+  },
+  {
+    name: 'homeRun',
+    test: function() {
+            return ( this.currentPlay.event === 'Home Run' );
+          }
+  },
+  {
+    name: 'highLeverage',
+    test: function() {
+            return ( getLeverage( this.currentPlay ) >= 90 );
+          }
+  },
+  {
+    name: 'bigWinprobChange',
+    test: function() {
+            var prevWinProb = getWinProb( this.previousPlay );
+            var curWinProb = getWinProb( this.currentPlay );
+            return ( Math.abs( curWinProb - prevWinProb ) >= 0.2 );
+          }
+  },
+  {
+    name: 'noHitter',
+    test: function() {
+            /* TODO: Not implemented yet. */
+            return false;
+          }
   }
 
-  return ( this.currentPlay.away_team_runs !== this.previousPlay.away_team_runs ) ||
-         ( this.currentPlay.home_team_runs !== this.previousPlay.home_team_runs );
-};
-
-Play.prototype.homeRun = function() {
-  return ( this.currentPlay.event === 'Home Run' );
-};
-
-Play.prototype.highLeverage = function() {
-  return ( getLeverage( this.currentPlay ) >= 90 );
-};
-
-Play.prototype.bigWinprobChange = function() {
-  var prevWinProb = getWinProb( this.previousPlay );
-  var curWinProb = getWinProb( this.currentPlay );
-  return ( Math.abs( curWinProb - prevWinProb ) >= 0.2 );
-};
-
-Play.prototype.noHitter = function() {
-  /* TODO: Not implemented yet. */
-  return false;
-};
+];
 
 function getWinProb( p ) {
   return getWinProbObj(p).pct;

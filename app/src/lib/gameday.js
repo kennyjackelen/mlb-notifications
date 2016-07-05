@@ -75,13 +75,15 @@ function getNewPlays( game_data_directory ) {
 
 function digestOnePlay( currentPlay, previousPlay ) {
   var play = new Play( currentPlay, previousPlay );
-  var criteria = play.getCriteria();
-  database.find( criteria, function( err, subscriptions ) {
-    for ( var i = 0; i < subscriptions.length; i++ ) {
-      var id = subscriptions[ i ].id;
-      notify( id, currentPlay );
-    }
-  });
+  var conditions = play.getConditions();
+  if ( conditions.$or.length > 0 ) {
+    database.find( conditions, function( err, subscriptions ) {
+      for ( var i = 0; i < subscriptions.length; i++ ) {
+        var id = subscriptions[ i ].id;
+        notify( id, currentPlay );
+      }
+    });
+  }
 }
 
 function notify( subscriptionID, currentPlay ) {
