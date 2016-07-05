@@ -23,4 +23,4 @@ app.use( express.static( path.resolve( __dirname, 'app/dist') ) );
 // go baby go!
 app.listen( PORT );
 
-fork('./lib/gameday.js');
+fork( path.resolve( __dirname, 'lib/gameday.js') );
