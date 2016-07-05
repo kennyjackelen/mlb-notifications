@@ -63,7 +63,9 @@ function getNewPlays( game_data_directory ) {
               digestOnePlay( events[ i ], null );
             }
           }
-          twinsGame.lastGUID = events[ events.length - 1 ].play_guid;
+          if ( events.length > 0 ) {
+            twinsGame.lastGUID = events[ events.length - 1 ].play_guid;
+          }
           resolve();
         }
       );
