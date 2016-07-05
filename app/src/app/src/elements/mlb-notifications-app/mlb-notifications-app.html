@@ -84,7 +84,8 @@
           subscription = null;
         }
         if ( subscription ) {
-          this.prevSubscription = subscription;
+          var endpointSections = subscription.split('/');
+          this.prevSubscription = endpointSections[ endpointSections.length - 1 ];
         }
         this.syncToServer();
       },

@@ -89,7 +89,7 @@ function notify( subscriptionID, currentPlay ) {
 
   var options = {
     host: 'android.googleapis.com',
-    port: 80,
+    port: 443,
     path: '/gcm/send',
     method: 'POST',
     headers: headers
@@ -102,7 +102,7 @@ function notify( subscriptionID, currentPlay ) {
       'title': 'MLB Notification',
       'message': 'Click me.'
     },
-    'registration_ids': subscriptionID
+    'registration_ids': [ subscriptionID ]
   };
   var dataString =  JSON.stringify(data);
 
