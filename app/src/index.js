@@ -3,7 +3,7 @@
 
 var express = require('express');
 var path = require('path');
-var fork = require('child').fork;
+var fork = require('child_process').fork;
 var bodyParser = require("body-parser");
 var PORT = process.env.PORT || 8080;
 
