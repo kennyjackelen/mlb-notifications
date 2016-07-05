@@ -49,13 +49,13 @@ function getTwinsGame() {
 function getNewPlays( game_data_directory ) {
   return new Promise(
     function( resolve, reject ) {
-      console.log( 'getting game events' );
       mlb.getGameEvents( game_data_directory, twinsGame.lastGUID, 
         function( err, events ) {
           if ( err ) {
             reject( err );
             return;
           }
+          console.log( 'got game events: ' + events.length );
           for ( var i = 0; i < events.length; i++ ) {
             if ( i > 0 ) {
               digestOnePlay( events[ i ], events[ i - 1 ] );
