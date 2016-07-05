@@ -49,6 +49,7 @@ function getTwinsGame() {
 function getNewPlays( game_data_directory ) {
   return new Promise(
     function( resolve, reject ) {
+      console.log( 'getting game events' );
       mlb.getGameEvents( game_data_directory, twinsGame.lastGUID, 
         function( err, events ) {
           if ( err ) {
