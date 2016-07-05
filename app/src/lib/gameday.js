@@ -2,7 +2,7 @@
 'use strict';
 
 var http = require('http');
-var mlb = require('mlb.js');
+var mlb = require('./mlb.js');
 var database = require('./database.js');
 var Play = require('./play.js');
 
