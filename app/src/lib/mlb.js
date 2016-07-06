@@ -109,7 +109,13 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
       for ( var i = 0; i < innings.length; i++ ) {
         var inning = innings[ i ];
         var j, atbat;
-        if ( inning.top && typeof( inning.top ) === Array ) {
+        console.log( 'inning' === inning );
+        if ( inning.top ) {
+          // when it is the first atbat, this is an object, not an array
+          // make it into an array for consistency
+          if ( inning.top.atbat.length === undefined ) {
+            inning.top.atbat = [ inning.top.atbat ];
+          }
           for ( j = 0; j < inning.top.atbat.length; j++ ) {
             atbat = inning.top.atbat[ j ];
             atbat.inning = Number( inning.num );
@@ -122,7 +128,12 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
             }
           }
         }
-        if ( inning.bottom && typeof( inning.bottom ) === Array ) {
+        if ( inning.bottom ) {
+          // when it is the first atbat, this is an object, not an array
+          // make it into an array for consistency
+          if ( inning.bottom.atbat.length === undefined ) {
+            inning.bottom.atbat = [ inning.bottom.atbat ];
+          }
           for ( j = 0; j < inning.bottom.atbat.length; j++ ) {
             atbat = inning.bottom.atbat[ j ];
             atbat.inning = Number( inning.num );
