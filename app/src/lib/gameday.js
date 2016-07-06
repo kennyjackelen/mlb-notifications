@@ -5,6 +5,7 @@ var http = require('http');
 var mlb = require('./mlb.js');
 var database = require('./database.js');
 var Play = require('./play.js');
+var moment = require('moment-timezone');
 
 var TICK_INTERAL = 5000;  // Every 5 seconds
 
@@ -13,7 +14,9 @@ var twinsGame = {};
 function getTwinsGame() {
   return new Promise( 
     function( resolve, reject ) {
-      var date = new Date();
+      var moment = require('moment-timezone');
+      var date = moment().tz('America/Chicago').toDate();
+      
       if ( date === twinsGame.date ) {
         resolve( twinsGame.game_data_directory );
         return;
