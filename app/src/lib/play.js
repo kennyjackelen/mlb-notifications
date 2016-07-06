@@ -14,7 +14,7 @@ Play.prototype.getConditions = function() {
   var conditions = { $or: [] };
   for ( var i = 0; i < this.criteria.length; i++ ) {
     var criterion = this.criteria[ i ];
-    if ( criterion.test().bind( this ) ) {
+    if ( criterion.test.bind( this )() ) {
       condition = {};
       condition[ criterion.name ] = true;
       conditions.$or.push( condition );
