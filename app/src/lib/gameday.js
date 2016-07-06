@@ -14,8 +14,8 @@ var twinsGame = {};
 function getTwinsGame() {
   return new Promise( 
     function( resolve, reject ) {
-      var moment = require('moment-timezone');
-      var date = moment().tz('America/Chicago').toDate();
+      var m = moment().tz('America/Chicago');
+      var date = new Date( m.year(), m.month(), m.date() );
       console.log( date );
       if ( date === twinsGame.date ) {
         resolve( twinsGame.game_data_directory );
