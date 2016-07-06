@@ -91,11 +91,15 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
 
   function _digestGameEvents( error, response, body ) {
     var innings;
-    console.log( body );
     var plays = [];
     if (!error && response.statusCode === 200) {
       try {
         innings = JSON.parse( body ).data.game.inning;
+        // when it is the first inning, this is an object, not an array
+        // make it into an array for consistency
+        if ( innings.length === undefined ) {
+          innings = [ innings ];
+        }
       } catch ( e ) {
         console.log('error parsing response');
         callback( true );
