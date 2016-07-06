@@ -110,7 +110,7 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
         var inning = innings[ i ];
         var j, atbat;
         console.log( 'inning' === inning );
-        if ( inning.top ) {
+        if ( inning.top && inning.top.atbat ) {
           // when it is the first atbat, this is an object, not an array
           // make it into an array for consistency
           if ( inning.top.atbat.length === undefined ) {
@@ -128,7 +128,7 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
             }
           }
         }
-        if ( inning.bottom ) {
+        if ( inning.bottom && inning.bottom.atbat ) {
           // when it is the first atbat, this is an object, not an array
           // make it into an array for consistency
           if ( inning.bottom.atbat.length === undefined ) {
