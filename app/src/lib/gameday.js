@@ -16,7 +16,7 @@ function getTwinsGame() {
     function( resolve, reject ) {
       var moment = require('moment-timezone');
       var date = moment().tz('America/Chicago').toDate();
-      
+      console.log( date );
       if ( date === twinsGame.date ) {
         resolve( twinsGame.game_data_directory );
         return;
