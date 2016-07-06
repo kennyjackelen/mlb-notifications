@@ -14,9 +14,10 @@ var twinsGame = {};
 function getTwinsGame() {
   return new Promise( 
     function( resolve, reject ) {
-      var m = moment().tz('America/Chicago');
+      // Use yesterday's games until 7am Central Time (for games that span midnight)
+      var m = moment().tz('America/Chicago').subtract( 7, 'hours');
       var date = new Date( m.year(), m.month(), m.date() );
-      console.log( date );
+
       if ( date === twinsGame.date ) {
         resolve( twinsGame.game_data_directory );
         return;
