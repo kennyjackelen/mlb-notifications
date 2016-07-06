@@ -109,7 +109,6 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
       for ( var i = 0; i < innings.length; i++ ) {
         var inning = innings[ i ];
         var j, atbat;
-        console.log( 'inning' === inning );
         if ( inning.top && inning.top.atbat ) {
           // when it is the first atbat, this is an object, not an array
           // make it into an array for consistency
@@ -120,6 +119,7 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
             atbat = inning.top.atbat[ j ];
             atbat.inning = Number( inning.num );
             atbat.isTop = true;
+            console.log( {'addToArray': addToArray, 'atbat': atbat } );
             if ( addToArray ) {
               plays.push( atbat );
             }
