@@ -23,11 +23,15 @@ Play.prototype.getConditions = function() {
   return conditions;
 };
 
+Play.prototype.gameStarted = function gameStarted() {
+  return ( this.currentPlay !== null && this.previousPlay === null );
+};
+
 Play.prototype.criteria = [
   {
     name: 'gameStart',
     test: function() {
-            return ( this.currentPlay !== null && this.previousPlay === null );
+            return this.gameStarted();
           }
   },
   {
