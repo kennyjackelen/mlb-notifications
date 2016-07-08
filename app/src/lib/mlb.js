@@ -105,7 +105,6 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
         callback( true );
         return;
       }
-      console.log( 'innings.length: ' + innings.length );
       for ( var i = 0; i < innings.length; i++ ) {
         var inning = innings[ i ];
         var j, atbat;
@@ -119,7 +118,6 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
             atbat = inning.top.atbat[ j ];
             atbat.inning = Number( inning.num );
             atbat.isTop = true;
-            console.log( {'addToArray': addToArray, 'atbat.play_guid': atbat.play_guid } );
             if ( addToArray ) {
               plays.push( atbat );
             }

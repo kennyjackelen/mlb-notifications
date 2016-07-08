@@ -53,7 +53,6 @@ function getNewPlays( game_data_directory ) {
             reject( err );
             return;
           }
-          console.log( 'got game events: ' + game_data_directory + ' ' + events.length );
           for ( var i = 0; i < events.length; i++ ) {
             if ( i > 0 ) {
               digestOnePlay( events[ i ], events[ i - 1 ] );
@@ -77,6 +76,7 @@ function digestOnePlay( currentPlay, previousPlay ) {
   var conditions = play.getConditions();
   if ( conditions.$or.length > 0 ) {
     database.find( conditions, function( err, subscriptions ) {
+      console.log( subscriptions );
       for ( var i = 0; i < subscriptions.length; i++ ) {
         var id = subscriptions[ i ].id;
         notify( id, currentPlay );
