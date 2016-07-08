@@ -127,7 +127,7 @@ function getWinProbObj( p ) {
     p.home_team_runs = 0;
     p.away_team_runs = 0;
   }
-  return winprob(
+  return winprob.getWinProb(
             p.isTop,
             p.inning,
             Number(p.o),
