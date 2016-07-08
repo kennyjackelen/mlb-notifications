@@ -23,6 +23,7 @@
     "mlb.js": "kennyjackelen/mlbjs",
     "moment-timezone": "^0.5.4",
     "mongoose": "^4.5.3",
+    "request": "^2.72.0",
     "run-sequence": "^1.2.2",
     "vinyl-source-stream": "^1.1.0",
     "winprob": "kennyjackelen/winprob"
