@@ -1,11 +1,11 @@
 /*jshint node:true*/
 'use strict';
 
-var http = require('http');
 var mlb = require('./mlb.js');
 var database = require('./database.js');
 var Play = require('./play.js');
 var moment = require('moment-timezone');
+var notify = require('./notify.js');
 
 var TICK_INTERAL = 5000;  // Every 5 seconds
 
@@ -83,54 +83,6 @@ function digestOnePlay( currentPlay, previousPlay ) {
       }
     });
   }
-}
-
-function notify( subscriptionID, currentPlay ) {
-  var headers = {
-    'Authorization' : 'key=' + process.env.GCM_API_KEY,
-    'Content-Type' : 'application/json'
-  };
-
-  console.log( 'notify' );
-
-  var options = {
-    host: 'android.googleapis.com',
-    port: 443,
-    path: '/gcm/send',
-    method: 'POST',
-    headers: headers
-  };
-
-  var data = {
-    'delayWhileIdle': true,
-    'timeToLive': 3,
-    'data': {
-      'title': 'MLB Notification',
-      'message': 'Click me.'
-    },
-    'registration_ids': [ subscriptionID ]
-  };
-  var dataString =  JSON.stringify(data);
-
-  var req = http.request(options, function(res) {
-    res.setEncoding('utf-8');
-    var responseString = '';
-
-    res.on('data', function(data) {
-      responseString += data;
-    });
-    res.on('end', function() {
-      // TODO: figure out how to clear the failed IDs.
-      console.log('response' + responseString);
-    });
-    console.log('STATUS: ' + res.statusCode);
-  });
-  req.on('error', function(e) {
-    console.log('error : ' + e.message + e.code);
-  });
-
-  req.write( dataString );
-  req.end();
 }
 
 function scheduleNext() {
