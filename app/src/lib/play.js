@@ -16,7 +16,7 @@ Play.prototype.getConditions = function() {
     var criterion = this.criteria[ i ];
     if ( criterion.test.bind( this )() ) {
       condition = {};
-      condition[ criterion.name ] = true;
+      condition[ 'settings.' + criterion.name ] = true;
       conditions.$or.push( condition );
     }
   }
