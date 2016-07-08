@@ -78,7 +78,7 @@ function digestOnePlay( currentPlay, previousPlay ) {
     database.find( conditions, function( err, subscriptions ) {
       console.log( subscriptions );
       for ( var i = 0; i < subscriptions.length; i++ ) {
-        var id = subscriptions[ i ].id;
+        var id = subscriptions[ i ].subscriptionID;
         notify( id, currentPlay );
       }
     });
