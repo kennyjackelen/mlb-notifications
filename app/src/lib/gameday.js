@@ -74,10 +74,10 @@ function getNewPlays( game_data_directory ) {
 
 function digestOnePlay( currentPlay, previousPlay ) {
   var play = new Play( currentPlay, previousPlay );
-  console.log('digesting one play.');
-  console.log( play );
   var conditions = play.getConditions();
   if ( conditions.$or.length > 0 ) {
+    console.log( conditions );
+    console.log( play );
     database.find( conditions, function( err, subscriptions ) {
       for ( var i = 0; i < subscriptions.length; i++ ) {
         var id = subscriptions[ i ].id;
