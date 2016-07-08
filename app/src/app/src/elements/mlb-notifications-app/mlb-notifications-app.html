@@ -33,6 +33,7 @@
                                on-test-notification="_testNotification"></notification-settings>
         <app-localstorage-document key="twins-settings" data="{{settings}}"></app-localstorage-document>
         <platinum-push-messaging id="ppm"
+                                 on-platinum-push-messaging-push="_pushReceived"
                                  on-platinum-push-messaging-error="_pushError"
                                  on-enabled-changed="_adjustToggleToMatch"
                                  on-subscription-changed="_pushSubscriptionChanged"></platinum-push-messaging>
@@ -109,6 +110,10 @@
 
       _pushError: function _pushError( error ) {
         this.$$('notification-settings').errorMessage = error.detail;
+      },
+
+      _pushReceived: function _pushReceived( pushObject ) {
+        console.log('Push received', pushObject );
       },
 
       settingsChanged: function settingsChanged() {

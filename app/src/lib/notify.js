@@ -1,4 +1,4 @@
-/*jshint node:true*/
+/*jshint node:true,esnext:true*/
 'use strict';
 
 var http = require('http');
@@ -52,7 +52,7 @@ function notify( subscriptionID, currentPlay ) {
       // TODO: figure out how to clear the failed IDs.
       console.log('response' + responseString);
       if ( queue.length > 0 ) {
-        notify.apply( this, queue.shift() );
+        setTimeout( 100, notify.apply( this, ...queue.shift() ) );
       }
     });
     console.log('STATUS: ' + res.statusCode);
