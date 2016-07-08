@@ -76,8 +76,6 @@ function digestOnePlay( currentPlay, previousPlay ) {
   var play = new Play( currentPlay, previousPlay );
   var conditions = play.getConditions();
   if ( conditions.$or.length > 0 ) {
-    console.log( conditions );
-    console.log( play );
     database.find( conditions, function( err, subscriptions ) {
       for ( var i = 0; i < subscriptions.length; i++ ) {
         var id = subscriptions[ i ].id;
@@ -92,6 +90,8 @@ function notify( subscriptionID, currentPlay ) {
     'Authorization' : 'key=' + process.env.GCM_API_KEY,
     'Content-Type' : 'application/json'
   };
+
+  console.log( 'notify' );
 
   var options = {
     host: 'android.googleapis.com',
