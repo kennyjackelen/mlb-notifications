@@ -8,7 +8,7 @@ var queue = [];
 
 module.exports = function( subscription, payload ) {
   if ( queue.length === 0 ) {
-    notify( subscription, payload );
+    notify( subscription, JSON.stringify( payload ) );
   }
   else {
     queue.push( arguments );
