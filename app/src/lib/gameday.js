@@ -162,14 +162,26 @@ function getScoreString( play ) {
   return away_string + ', ' + home_string;
 }
 
+function getBattingTeam( play ) {
+  var reallyTop = play.currentPlay.isTop && Number( play.currentPlay.o ) !== 3;
+  reallyTop = reallyTop || ( !play.currentPlay.isTop && Number( play.currentPlay.o ) === 3 );
+  if ( reallyTop ) {
+    return twinsGame.game.away_name_name + ' batting';
+  }
+  return twinsGame.game.home_name_name + ' batting';
+}
+
 function getGameState( play ) {
-  return getScoreString( play ) + '. ' + getInningString( play ) + '. ' + getBaserunnerState( play ) + '. ' + getOuts( play ) + '.';
+  return getBattingTeam( play ) + '. ' + getInningString( play ) + '. ' + getBaserunnerState( play ) + '. ' + getOuts( play ) + '.';
 }
 
 function getOuts( play ) {
   var outs = Number( play.currentPlay.o );
   if ( outs === 1 ) {
     return '1 out';
+  }
+  if ( outs === 3 ) {
+    outs = 0;
   }
   return outs + ' outs';
 }
