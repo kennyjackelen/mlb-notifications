@@ -82,9 +82,19 @@ Play.prototype.criteria = [
               }
               return false;
             }
-
-            return ( this.currentPlay.away_team_runs !== this.previousPlay.away_team_runs ) ||
-                   ( this.currentPlay.home_team_runs !== this.previousPlay.home_team_runs );
+            if ( this.currentPlay.away_team_runs > this.currentPlay.home_team_runs &&
+                 this.previousPlay.away_team_runs <= this.previousPlay.home_team_runs ) {
+              return true; // away team just took the lead
+            }
+            if ( this.currentPlay.home_team_runs > this.currentPlay.away_team_runs &&
+                 this.previousPlay.home_team_runs <= this.previousPlay.away_team_runs ) {
+              return true;  // home team just took the lead
+            }
+            if ( this.currentPlay.home_team_runs === this.currentPlay.away_team_runs &&
+                 this.previousPlay.home_team_runs !== this.previousPlay.away_team_runs ) {
+              return true;  // game was just tied up
+            }
+            return false;
           }
   },
   {
