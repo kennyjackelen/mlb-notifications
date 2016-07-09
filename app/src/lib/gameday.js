@@ -166,7 +166,7 @@ function getScoreString( play ) {
 }
 
 function getGameState( play ) {
-  return getScoreString( play ) + '. ' + getBaserunnerState( play ) + '. ' + getOuts( play ) + '.';
+  return getScoreString( play ) + '. ' + getInningString( play ) + '. ' + getBaserunnerState( play ) + '. ' + getOuts( play ) + '.';
 }
 
 function getOuts( play ) {
@@ -205,7 +205,7 @@ function getBaserunnerState( play ) {
   return 'Bases empty';  // empty
 }
 
-function getInningString() {
+function getInningString( play ) {
   var gameStatus = twinsGame.game.status;
   if ( gameStatus.ind === 'F' || gameStatus.ind === 'O' ) {
     if ( Number( gameStatus.inning ) > 9 ) {
@@ -213,20 +213,20 @@ function getInningString() {
     }
     return 'Final';
   }
-  if ( gameStatus.top_inning === 'Y' ) {
-    if ( gameStatus.o === '3' ) {
-      return 'Mid ' + gameStatus.inning;
+  if ( play.currentPlay.isTop ) {
+    if ( play.currentPlay.o === '3' ) {
+      return 'Mid ' + play.currentPlay.inning;
     }
     else {
-      return 'Top ' + gameStatus.inning;
+      return 'Top ' + play.currentPlay.inning;
     }
   }
   else {
-    if ( gameStatus.o === '3' ) {
-      return 'End ' + gameStatus.inning;
+    if ( play.currentPlay.o === '3' ) {
+      return 'End ' + play.currentPlay.inning;
     }
     else {
-      return 'Bot ' + gameStatus.inning;
+      return 'Bot ' + play.currentPlay.inning;
     }
   }
 }
