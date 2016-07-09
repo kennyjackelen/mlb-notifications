@@ -90,8 +90,9 @@ function digestOnePlay( currentPlay, previousPlay ) {
       for ( var i = 0; i < subscriptions.length; i++ ) {
         var subscription = subscriptions[ i ].subscription;
         var payload = buildNotificationPayload( play );
+        console.log( payload );
         payload.icon = './images/android-chrome-512x512.png';
-        notify( subscription, payload );
+        //notify( subscription, payload );
       }
     });
   }
@@ -99,7 +100,6 @@ function digestOnePlay( currentPlay, previousPlay ) {
 
 function buildNotificationPayload( play ) {
   var eventTypes = play.getEventTypes();
-  console.log( eventTypes );
   if ( eventTypes.leadChange ) {
     return {
       title: 'Lead Change: ' + getScoreString( play ),
