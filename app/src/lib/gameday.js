@@ -14,8 +14,6 @@ var twinsGame = {};
 // will be set to false after the first run
 var suppressNotify = true;
 
-suppressNotify = false ; //DEBUGGING!
-
 function getTwinsGame() {
   return new Promise( 
     function( resolve, reject ) {
@@ -31,7 +29,7 @@ function getTwinsGame() {
           }
           for ( var i = 0; i < schedule.length; i++ ) {
             var game = schedule[ i ];
-            if ( game.away_name_abbrev === 'DET' || game.home_name_abbrev === 'DET' ) {
+            if ( game.away_name_abbrev === 'ATL' || game.home_name_abbrev === 'ATL' ) {
               twinsGame.date = date;
               twinsGame.game_data_directory = game.game_data_directory;
               twinsGame.game = game;
@@ -90,9 +88,8 @@ function digestOnePlay( currentPlay, previousPlay ) {
       for ( var i = 0; i < subscriptions.length; i++ ) {
         var subscription = subscriptions[ i ].subscription;
         var payload = buildNotificationPayload( play );
-        console.log( payload );
         payload.icon = './images/android-chrome-512x512.png';
-        //notify( subscription, payload );
+        notify( subscription, payload );
       }
     });
   }
