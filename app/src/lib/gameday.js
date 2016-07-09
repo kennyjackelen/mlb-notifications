@@ -43,7 +43,7 @@ function getTwinsGame() {
   );
 }
 
-function getNewPlays( twinsGame, game_data_directory ) {
+function getNewPlays( game_data_directory ) {
   return new Promise(
     function( resolve, reject ) {
       console.log( 'using lastGUID: ', twinsGame.lastGUID );
