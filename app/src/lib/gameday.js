@@ -11,6 +11,9 @@ var TICK_INTERAL = 5000;  // Every 5 seconds
 
 var twinsGame = {};
 
+// will be set to false after the first run
+var suppressNotify = true;
+
 function getTwinsGame() {
   return new Promise( 
     function( resolve, reject ) {
@@ -49,14 +52,17 @@ function getNewPlays( game_data_directory ) {
             reject( err );
             return;
           }
-          for ( var i = 0; i < events.length; i++ ) {
-            if ( i > 0 ) {
-              digestOnePlay( events[ i ], events[ i - 1 ] );
-            }
-            else if ( twinsGame.lastGUID ) {
-              digestOnePlay( events[ i ], null );
+          if ( !suppressNotify ) {
+            for ( var i = 0; i < events.length; i++ ) {
+              if ( i > 0 ) {
+                digestOnePlay( events[ i ], events[ i - 1 ] );
+              }
+              else if ( twinsGame.lastGUID ) {
+                digestOnePlay( events[ i ], null );
+              }
             }
           }
+          suppressNotify = false;
           if ( events.length > 0 ) {
             twinsGame.lastGUID = events[ events.length - 1 ].play_guid;
           }
