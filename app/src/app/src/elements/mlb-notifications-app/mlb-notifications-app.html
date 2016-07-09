@@ -77,6 +77,7 @@
       },
 
       _pushSubscriptionChanged: function _pushSubscriptionChanged() {
+        this._prevSubscription = this.$.ppm.subscription;
         this.syncToServer();
       },
 
@@ -111,7 +112,7 @@
 
       syncToServer: function subscription(){
         // If there's no subscription, the server won't do anything meaningful anyway.
-        if ( this.prevSubscription ) {
+        if ( this.$.ppm.subscription || this._prevSubscription ) {
           if ( this._syncTimeout ) {
             clearTimeout( this._syncTimeout );
           } 
@@ -127,8 +128,13 @@
         try {
           payload.subscription = this.$.ppm.subscription.toJSON();
         }
-        catch( e ) {
-          return;
+        catch( e1 ) {
+          try {
+            payload.subscription = this._prevSubscription.toJSON();
+          }
+          catch( e2 ) {
+            return;
+          }
         }
 
         xhr.open('POST', './subscription_change');
