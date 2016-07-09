@@ -90,6 +90,7 @@ function digestOnePlay( currentPlay, previousPlay ) {
 
 function buildNotificationPayload( play, conditions ) {
   var eventTypes = play.getEventTypes();
+  console.log( eventTypes );
   if ( eventTypes.leadChange ) {
     return {
       title: 'Lead Change: ' + getScoreString( play ),
