@@ -44,7 +44,7 @@ function getTwinsGame() {
   );
 }
 
-function getNewPlays( game_data_directory ) {
+function getNewPlays( twinsGame, game_data_directory ) {
   return new Promise(
     function( resolve, reject ) {
       console.log( 'using lastGUID: ', twinsGame.lastGUID );
@@ -93,7 +93,7 @@ function scheduleNext() {
 }
 
 function tick() {
-  getTwinsGame()
+  getTwinsGame.bind( this, twinsGame )()
   .then( getNewPlays )
   .catch( function( err ) { console.log( err ); } )
   .then( scheduleNext );
