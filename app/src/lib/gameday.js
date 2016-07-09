@@ -142,7 +142,7 @@ function buildNotificationPayload( play ) {
   }
   if ( eventTypes.halfInning ) {
     return {
-      title: getInningString() + ': ' + getScoreString( play )
+      title: getInningString( play ) + ': ' + getScoreString( play )
     };
   }
   return {
