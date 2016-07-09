@@ -163,22 +163,22 @@ function getScoreString( play ) {
   return away_string + ', ' + home_string;
 }
 
-function getGameState() {
-  return getScoreString() + '. ' + getBaserunnerState() + '. ' + getOuts() + '.';
+function getGameState( play ) {
+  return getScoreString( play ) + '. ' + getBaserunnerState( play ) + '. ' + getOuts( play ) + '.';
 }
 
-function getOuts() {
-  var outs = Number( twinsGame.game.status.o );
+function getOuts( play ) {
+  var outs = Number( play.currentPlay.o );
   if ( outs === 1 ) {
     return '1 out';
   }
   return outs + ' outs';
 }
 
-function getBaserunnerState() {
-  var runner_on_1b = Boolean( twinsGame.game.runners_on_base.runner_on_1b );
-  var runner_on_2b = Boolean( twinsGame.game.runners_on_base.runner_on_2b );
-  var runner_on_3b = Boolean( twinsGame.game.runners_on_base.runner_on_3b );
+function getBaserunnerState( play ) {
+  var runner_on_1b = Boolean( play.currentPlay.b1 );
+  var runner_on_2b = Boolean( play.currentPlay.b2 );
+  var runner_on_3b = Boolean( play.currentPlay.b3 );
   if ( runner_on_1b ) {
     if ( runner_on_2b ) {
       if ( runner_on_3b ) {
