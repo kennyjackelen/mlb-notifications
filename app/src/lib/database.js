@@ -24,7 +24,7 @@ MongoWrapper.prototype._onConnectionOpened = function() {
 
 MongoWrapper.prototype.store = function( settings, subscription, callback ) {
   this.Subscription.findOneAndUpdate( 
-    { subscription: subscription }, 
+    { subscription: { endpoint: subscription.endpoint } }, 
     { subscription: subscription, settings: settings },
     { upsert: true },
     callback );
@@ -32,7 +32,7 @@ MongoWrapper.prototype.store = function( settings, subscription, callback ) {
 
 MongoWrapper.prototype.remove = function( subscription, callback ) {
   this.Subscription.findOneAndRemove( 
-    { subscription: subscription },
+    { subscription: { endpoint: subscription.endpoint } }, 
     callback );
 };
 
