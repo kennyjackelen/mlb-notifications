@@ -100,25 +100,25 @@ function buildNotificationPayload( play ) {
   if ( eventTypes.leadChange ) {
     return {
       title: 'Lead Change: ' + getScoreString( play ),
-      message: play.currentPlay.des
+      message: getInningString( play ) + '. ' + play.currentPlay.des
     };
   }
   if ( eventTypes.runScored ) {
     return {
       title: 'Run Scored: ' + getScoreString( play ),
-      message: play.currentPlay.des
+      message: getInningString( play ) + '. ' + play.currentPlay.des
     };
   }
   if ( eventTypes.homeRun ) {
     return {
       title: 'Home Run: ' + getScoreString( play ),
-      message: play.currentPlay.des
+      message: getInningString( play ) + '. ' + play.currentPlay.des
     };
   }
   if ( eventTypes.bigWinprobChange ) {
     return {
       title: 'Big Play: ' + getScoreString( play ),
-      message: play.currentPlay.des
+      message: getInningString( play ) + '. ' + play.currentPlay.des
     };
   }
   if ( eventTypes.highLeverage ) {
@@ -147,7 +147,7 @@ function buildNotificationPayload( play ) {
   }
   return {
     title: getScoreString( play ),
-    message: play.currentPlay.des
+    message: getInningString( play ) + '. ' + play.currentPlay.des
   };
 }
 
