@@ -18,10 +18,6 @@ function getTwinsGame() {
       var m = moment().tz('America/Chicago').subtract( 7, 'hours');
       var date = new Date( m.year(), m.month(), m.date() );
 
-      if ( date === twinsGame.date ) {
-        resolve( twinsGame.game_data_directory );
-        return;
-      }
       mlb.getSchedule( date,
         function( err, schedule ){
           if ( err ) {
@@ -31,9 +27,10 @@ function getTwinsGame() {
           for ( var i = 0; i < schedule.length; i++ ) {
             var game = schedule[ i ];
             if ( game.away_name_abbrev === 'MIN' || game.home_name_abbrev === 'MIN' ) {
-              resolve( game.game_data_directory );
               twinsGame.date = date;
               twinsGame.game_data_directory = game.game_data_directory;
+              twinsGame.game = game;
+              resolve( game.game_data_directory );
               break;
             }
           }
@@ -77,11 +74,97 @@ function digestOnePlay( currentPlay, previousPlay ) {
     database.find( conditions, function( err, subscriptions ) {
       for ( var i = 0; i < subscriptions.length; i++ ) {
         var subscription = subscriptions[ i ].subscription;
-        notify( subscription, {
-          title: currentPlay.des
-        } );
+        var payload = buildNotificationPayload( play, conditions );
+        payload.icon = './images/android-chrome-512x512.png';
+        notify( subscription, payload );
       }
     });
+  }
+}
+
+function buildNotificationPayload( play, conditions ) {
+  if ( conditions.$or.leadChange ) {
+    return {
+      title: 'Lead Change: ' + getScoreString( play ),
+      message: play.currentPlay.des
+    };
+  }
+  if ( conditions.$or.runScored ) {
+    return {
+      title: 'Run Scored: ' + getScoreString( play ),
+      message: play.currentPlay.des
+    };
+  }
+  if ( conditions.$or.homeRun ) {
+    return {
+      title: 'Home Run: ' + getScoreString( play ),
+      message: play.currentPlay.des
+    };
+  }
+  if ( conditions.$or.bigWinprobChange ) {
+    return {
+      title: 'Big Play: ' + getScoreString( play ),
+      message: play.currentPlay.des
+    };
+  }
+  if ( conditions.$or.gameStart ) {
+    return {
+      title: 'Game Started: ' + getScoreString( play )
+    };
+  }
+  if ( conditions.$or.gameEnd ) {
+    return {
+      title: 'Final: ' + getScoreString( play )
+    };
+  }
+  if ( conditions.$or.noHitter ) {
+    return { };
+  }
+  if ( conditions.$or.halfInning ) {
+    return {
+      title: getInningString() + ': ' + getScoreString( play )
+    };
+  }
+  return {
+    title: getScoreString( play ),
+    message: play.currentPlay.des
+  };
+}
+
+function getScoreString( play ) {
+  var home_team_runs = Number( play.currentPlay.home_team_runs );
+  var away_team_runs = Number( play.currentPlay.away_team_runs );
+  var home_string = twinsGame.game.home_name_abbrev + ' ' + home_team_runs;
+  var away_string = twinsGame.game.away_name_abbrev + ' ' + away_team_runs;
+  if ( home_team_runs > away_team_runs ) {
+    return home_string + ', ' + away_string;
+  }
+  return away_string + ', ' + home_string;
+}
+
+function getInningString() {
+  var gameStatus = twinsGame.game.status;
+  if ( gameStatus.status === 'Final' ) {
+    if ( Number( gameStatus.inning ) > 9 ) {
+      return 'Final (' + gameStatus.inning + ')';
+    }
+    return 'Final';
+  }
+  if ( gameStatus.top_inning === 'Y' ) {
+    if ( gameStatus.o === '3' ) {
+      return 'Mid ' + gameStatus.inning;
+    }
+    else {
+      return 'Top ' + gameStatus.inning;
+    }
+  }
+  else {
+    if ( gameStatus.o === '3' ) {
+      return 'End ' + gameStatus.inning;
+    }
+    else {
+      return 'Bot ' + gameStatus.inning;
+    }
   }
 }
 
