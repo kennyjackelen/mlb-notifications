@@ -21,8 +21,7 @@ function notify( subscriptionID, currentPlay ) {
     headers: {
       'Authorization' : 'key=' + process.env.GCM_API_KEY
     },
-    json: true,
-    body: {
+    json: {
       'delayWhileIdle': true,
       'timeToLive': 3,
       'data': {
