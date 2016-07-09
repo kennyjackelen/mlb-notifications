@@ -20,8 +20,8 @@ function notify( subscription, payload ) {
     subscription.endpoint,
     {
       TTL: 10,
-      userPublicKey: subscription.p256dh,
-      userAuth: subscription.auth,
+      userPublicKey: subscription.keys.p256dh,
+      userAuth: subscription.keys.auth,
       payload: payload
     }
   )
