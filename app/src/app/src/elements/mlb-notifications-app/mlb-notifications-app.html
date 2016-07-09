@@ -84,7 +84,36 @@
       },
 
       _testNotification: function _testNotification() {
-        this.$.ppm.testPush('Testing!');
+
+        var xhr = new XMLHttpRequest();
+        var payload = {
+          title: 'Title',
+          body: 'Body',
+          icon: './images/app-icon.svg'
+        };
+        var subscription;
+
+        try {
+          subscription = this.$.ppm.subscription.toJSON();
+        }
+        catch( e1 ) {
+          try {
+            subscription = this._prevSubscription.toJSON();
+          }
+          catch( e2 ) {
+            return;
+          }
+        }
+
+        xhr.open('POST', './test_push');
+        xhr.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
+        xhr.onerror = function() {
+          console.log('Couldn\'t send subscription to server.');
+        };
+        xhr.send( JSON.stringify( { payload: payload, subscription: subscription } ) );
+
+        console.log( 'Test push: payload to server: ', payload );
+
       },
 
       _toggleNotifications: function _toggleNotifications( event ) {
