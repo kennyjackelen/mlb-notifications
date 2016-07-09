@@ -135,6 +135,8 @@
 
       _pushReceived: function _pushReceived( pushObject ) {
         console.log('Push received', pushObject );
+        pushObject.detail.message.body = pushObject.detail.message.message;
+        var notification = new Notification( pushObject.detail.message.title, pushObject.detail.message );
       },
 
       settingsChanged: function settingsChanged() {
