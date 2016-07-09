@@ -46,7 +46,11 @@ function getTwinsGame() {
 function getNewPlays( game_data_directory ) {
   return new Promise(
     function( resolve, reject ) {
-      mlb.getGameEvents( game_data_directory, twinsGame.lastGUID, 
+      var lastGUID;
+      if ( twinsGame.lastPlay ) {
+        lastGUID = twinsGame.lastPlay.play_guid;
+      }
+      mlb.getGameEvents( game_data_directory, lastGUID, 
         function( err, events ) {
           if ( err ) {
             reject( err );
@@ -57,14 +61,17 @@ function getNewPlays( game_data_directory ) {
               if ( i > 0 ) {
                 digestOnePlay( events[ i ], events[ i - 1 ] );
               }
-              else if ( twinsGame.lastGUID ) {
+              else if ( twinsGame.lastPlay ) {
+                digestOnePlay( events[ i ], twinsGame.lastPlay );
+              }
+              else {
                 digestOnePlay( events[ i ], null );
               }
             }
           }
           suppressNotify = false;
           if ( events.length > 0 ) {
-            twinsGame.lastGUID = events[ events.length - 1 ].play_guid;
+            twinsGame.lastPlay = events[ events.length - 1 ];
           }
           resolve();
         }
