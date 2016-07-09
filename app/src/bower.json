@@ -19,7 +19,7 @@
     "paper-elements": "^1.0.7",
     "neon-elements": "^1.0.0",
     "app-storage": "^0.9.4",
-    "platinum-push-messaging": "kennyjackelen/platinum-push-messaging#^1.0.5"
+    "platinum-push-messaging": "kennyjackelen/platinum-push-messaging#master"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
