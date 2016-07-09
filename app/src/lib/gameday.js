@@ -14,6 +14,8 @@ var twinsGame = {};
 // will be set to false after the first run
 var suppressNotify = true;
 
+suppressNotify = false ; //DEBUGGING!
+
 function getTwinsGame() {
   return new Promise( 
     function( resolve, reject ) {
