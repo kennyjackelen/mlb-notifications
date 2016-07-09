@@ -83,44 +83,51 @@ function digestOnePlay( currentPlay, previousPlay ) {
 }
 
 function buildNotificationPayload( play, conditions ) {
-  if ( conditions.$or.leadChange ) {
+  var eventTypes = play.getEventTypes();
+  if ( eventTypes.leadChange ) {
     return {
       title: 'Lead Change: ' + getScoreString( play ),
       message: play.currentPlay.des
     };
   }
-  if ( conditions.$or.runScored ) {
+  if ( eventTypes.runScored ) {
     return {
       title: 'Run Scored: ' + getScoreString( play ),
       message: play.currentPlay.des
     };
   }
-  if ( conditions.$or.homeRun ) {
+  if ( eventTypes.homeRun ) {
     return {
       title: 'Home Run: ' + getScoreString( play ),
       message: play.currentPlay.des
     };
   }
-  if ( conditions.$or.bigWinprobChange ) {
+  if ( eventTypes.bigWinprobChange ) {
     return {
       title: 'Big Play: ' + getScoreString( play ),
       message: play.currentPlay.des
     };
   }
-  if ( conditions.$or.gameStart ) {
+  if ( eventTypes.highLeverage ) {
+    return {
+      title: 'High Leverage: ' + getScoreString( play ),
+      message: getGameState( play )
+    };
+  }
+  if ( eventTypes.gameStart ) {
     return {
       title: 'Game Started: ' + getScoreString( play )
     };
   }
-  if ( conditions.$or.gameEnd ) {
+  if ( eventTypes.gameEnd ) {
     return {
       title: 'Final: ' + getScoreString( play )
     };
   }
-  if ( conditions.$or.noHitter ) {
+  if ( eventTypes.noHitter ) {
     return { };
   }
-  if ( conditions.$or.halfInning ) {
+  if ( eventTypes.halfInning ) {
     return {
       title: getInningString() + ': ' + getScoreString( play )
     };
@@ -140,6 +147,46 @@ function getScoreString( play ) {
     return home_string + ', ' + away_string;
   }
   return away_string + ', ' + home_string;
+}
+
+function getGameState() {
+  return getScoreString() + '. ' + getBaserunnerState() + '. ' + getOuts() + '.';
+}
+
+function getOuts() {
+  var outs = Number( twinsGame.game.status.o );
+  if ( outs === 1 ) {
+    return '1 out';
+  }
+  return outs + ' outs';
+}
+
+function getBaserunnerState() {
+  var runner_on_1b = Boolean( twinsGame.game.runners_on_base.runner_on_1b );
+  var runner_on_2b = Boolean( twinsGame.game.runners_on_base.runner_on_2b );
+  var runner_on_3b = Boolean( twinsGame.game.runners_on_base.runner_on_3b );
+  if ( runner_on_1b ) {
+    if ( runner_on_2b ) {
+      if ( runner_on_3b ) {
+        return 'Bases loaded';  // loaded
+      }
+      return 'Runners on first and second';  // 1 + 2
+    }
+    if ( runner_on_3b ) {
+      return 'Runners on first and third';  // corners
+    }
+    return 'Runner on first';  // 1 only
+  }
+  if ( runner_on_2b ) {
+    if ( runner_on_3b ) {
+      return 'Runners on second and third';  // 2 + 3
+    }
+    return 'Runner on second';  // 2 only
+  }
+  if ( runner_on_3b ) {
+    return 'Runner on third';  // 3 only
+  }
+  return 'Bases empty';  // empty
 }
 
 function getInningString() {

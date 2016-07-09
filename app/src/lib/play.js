@@ -23,6 +23,17 @@ Play.prototype.getConditions = function() {
   return conditions;
 };
 
+Play.prototype.getEventTypes = function() {
+  var eventTypes = {};
+  for ( var i = 0; i < this.criteria.length; i++ ) {
+    var criterion = this.criteria[ i ];
+    if ( criterion.test.bind( this )() ) {
+      eventTypes[ criterion.name ] = true;
+    }
+  }
+  return eventTypes;
+};
+
 Play.prototype.gameStarted = function gameStarted() {
   return ( this.currentPlay !== null && this.previousPlay === null );
 };
