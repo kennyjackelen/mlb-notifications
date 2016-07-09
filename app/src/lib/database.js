@@ -22,17 +22,17 @@ MongoWrapper.prototype._onConnectionOpened = function() {
   this.Subscription = this.mongoose.model('Subscription', subscriptionSchema);
 };
 
-MongoWrapper.prototype.store = function( settings, subscriptionID, callback ) {
+MongoWrapper.prototype.store = function( settings, subscription, callback ) {
   this.Subscription.findOneAndUpdate( 
-    { subscriptionID: subscriptionID }, 
-    { subscriptionID: subscriptionID, settings: settings },
+    { subscription: subscription }, 
+    { subscription: subscription, settings: settings },
     { upsert: true },
     callback );
 };
 
-MongoWrapper.prototype.remove = function( subscriptionID, callback ) {
+MongoWrapper.prototype.remove = function( subscription, callback ) {
   this.Subscription.findOneAndRemove( 
-    { subscriptionID: subscriptionID },
+    { subscription: subscription },
     callback );
 };
 

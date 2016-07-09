@@ -5,7 +5,7 @@ module.exports = function( router ) {
 
   router.post('/subscription_change', function( req, res, next ) {
     var settings = req.body.settings;
-    var subscriptionID = req.body.subscriptionID;
+    var subscription = req.body.subscription;
     var database = req.app.locals.database;
 
     var cb = function( err ) {
@@ -18,10 +18,10 @@ module.exports = function( router ) {
     };
 
     if ( !settings.turnedOn ) {
-      database.remove( subscriptionID, cb );
+      database.remove( subscription, cb );
     }
     else {
-      database.store( settings, subscriptionID, cb );
+      database.store( settings, subscription, cb );
     }
   });
   
