@@ -10,7 +10,6 @@ var runSequence = require('run-sequence');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var merge = require('merge-stream');
-var replace = require('gulp-replace');
 var stylemod = require('gulp-style-modules');
 
 gulp.task('clean', function() {
@@ -97,8 +96,6 @@ gulp.task('copy-rev', function() {
 */
 gulp.task('copy-service-worker', function() {
   return gulp.src('./bower_components/platinum-push-messaging/service-worker.js')
-    .pipe( replace( 'messagePromise = data ? data.json() : Promise.resolve({});',
-                    'messagePromise = data ? Promise.resolve( data.json() ) : Promise.resolve({});' ) )
     .pipe( gulp.dest('./app/dist/elements') );
 });
 
