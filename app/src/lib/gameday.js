@@ -61,6 +61,8 @@ function getNewPlays( game_data_directory ) {
               digestOnePlay( events[ i ], null );
             }
           }
+
+            console.log( events.length );
           if ( events.length > 0 ) {
             twinsGame.lastGUID = events[ events.length - 1 ].play_guid;
           }
@@ -76,7 +78,6 @@ function digestOnePlay( currentPlay, previousPlay ) {
   var conditions = play.getConditions();
   if ( conditions.$or.length > 0 ) {
     database.find( conditions, function( err, subscriptions ) {
-      console.log( subscriptions );
       for ( var i = 0; i < subscriptions.length; i++ ) {
         var subscription = subscriptions[ i ].subscription;
         notify( subscription, {
