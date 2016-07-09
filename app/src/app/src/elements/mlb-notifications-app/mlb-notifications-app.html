@@ -77,17 +77,6 @@
       },
 
       _pushSubscriptionChanged: function _pushSubscriptionChanged() {
-        var subscription;
-        try {
-          subscription = this.$.ppm.subscription.endpoint;
-        }
-        catch ( e ) {
-          subscription = null;
-        }
-        if ( subscription ) {
-          var endpointSections = subscription.split('/');
-          this.prevSubscription = endpointSections[ endpointSections.length - 1 ];
-        }
         this.syncToServer();
       },
 
@@ -134,8 +123,13 @@
         var xhr = new XMLHttpRequest();
         var payload = {};
 
-        payload.subscriptionID = this.prevSubscription;
         payload.settings = this.settings;
+        try {
+          payload.subscription = this.$.ppm.subscription.toJSON();
+        }
+        catch( e ) {
+          return;
+        }
 
         xhr.open('POST', './subscription_change');
         xhr.setRequestHeader('Content-type', 'application/json; charset=UTF-8');

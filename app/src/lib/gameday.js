@@ -79,7 +79,9 @@ function digestOnePlay( currentPlay, previousPlay ) {
       console.log( subscriptions );
       for ( var i = 0; i < subscriptions.length; i++ ) {
         var id = subscriptions[ i ].subscriptionID;
-        notify( id, currentPlay );
+        notify( id, {
+          title: currentPlay.des
+        } );
       }
     });
   }

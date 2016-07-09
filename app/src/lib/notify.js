@@ -1,39 +1,36 @@
 /*jshint node:true,esnext:true*/
 'use strict';
 
-var request = require('request');
+var push = require('web-push');
+push.setGCMAPIKey( process.env.GCM_API_KEY );
 
 var queue = [];
 
-module.exports = function( subscriptionID, currentPlay ) {
+module.exports = function( subscription, payload ) {
   if ( queue.length === 0 ) {
-    notify( subscriptionID, currentPlay );
+    notify( subscription, payload );
   }
   else {
     queue.push( arguments );
   }
 };
 
-function notify( subscriptionID, currentPlay ) {
-  request( {
-    method: 'POST',
-    url: 'https://android.googleapis.com/gcm/send',
-    headers: {
-      'Authorization' : 'key=' + process.env.GCM_API_KEY
-    },
-    json: {
-      'delayWhileIdle': true,
-      'timeToLive': 3,
-      'data': {
-        'title': 'MLB Notification',
-        'message': 'Click me.'
-      },
-      'registration_ids': [ subscriptionID ]
+function notify( subscription, payload ) {
+  push.sendNotification(
+    subscription.endpoint,
+    {
+      TTL: 10,
+      userPublicKey: subscription.p256dh,
+      userAuth: subscription.auth,
+      payload: payload
     }
-  },
-  function() {
-    if ( queue.length > 0 ) {
-      setTimeout( 100, notify.apply( this, ...queue.shift() ) );
+  )
+  .catch( ( e ) => console.log( e ) )
+  .then(
+    function() {
+      if ( queue.length > 0 ) {
+        setTimeout( 100, notify.apply( this, ...queue.shift() ) );
+      }
     }
-  } );
+  );
 }

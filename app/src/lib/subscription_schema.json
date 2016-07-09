@@ -1,5 +1,11 @@
 {
-    "subscriptionID": "String",
+    "subscription": {
+      "endpoint": "String",
+      "keys": {
+        "p256dh": "String",
+        "auth": "String"
+      }
+    },
     "settings": {
       "turnedOn": "Boolean",
       "gameStart": "Boolean",
