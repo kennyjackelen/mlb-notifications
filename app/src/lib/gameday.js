@@ -81,13 +81,13 @@ function getNewPlays( game_data_directory ) {
 }
 
 function digestOnePlay( currentPlay, previousPlay ) {
-  var play = new Play( currentPlay, previousPlay );
+  var play = new Play( currentPlay, previousPlay, twinsGame.game );
   var conditions = play.getConditions();
   if ( conditions.$or.length > 0 ) {
     database.find( conditions, function( err, subscriptions ) {
       for ( var i = 0; i < subscriptions.length; i++ ) {
         var subscription = subscriptions[ i ].subscription;
-        var payload = buildNotificationPayload( play, conditions );
+        var payload = buildNotificationPayload( play );
         payload.icon = './images/android-chrome-512x512.png';
         notify( subscription, payload );
       }
@@ -95,7 +95,7 @@ function digestOnePlay( currentPlay, previousPlay ) {
   }
 }
 
-function buildNotificationPayload( play, conditions ) {
+function buildNotificationPayload( play ) {
   var eventTypes = play.getEventTypes();
   console.log( eventTypes );
   if ( eventTypes.leadChange ) {
@@ -205,7 +205,7 @@ function getBaserunnerState() {
 
 function getInningString() {
   var gameStatus = twinsGame.game.status;
-  if ( gameStatus.status === 'Final' ) {
+  if ( gameStatus.ind === 'F' || gameStatus.ind === 'O' ) {
     if ( Number( gameStatus.inning ) > 9 ) {
       return 'Final (' + gameStatus.inning + ')';
     }

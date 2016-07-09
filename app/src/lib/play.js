@@ -3,9 +3,10 @@
 
 var winprob = require('winprob');
 
-var Play = function( currentPlay, previousPlay ){
+var Play = function( currentPlay, previousPlay, game ){
   this.currentPlay = currentPlay;
   this.previousPlay = previousPlay;
+  this.game = game;
 };
 
 Play.prototype.getConditions = function() {
@@ -54,8 +55,8 @@ Play.prototype.criteria = [
   {
     name: 'gameEnd',
     test: function() {
-            /* TODO: Not implemented.  Not enough data in just the plays to get this. */
-            return false;
+            // F = final, O = game over
+            return ( this.game.status.ind === 'F' || this.game.status.ind === 'O' );
           }
   },
   {
