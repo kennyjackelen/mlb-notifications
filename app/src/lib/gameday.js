@@ -22,7 +22,6 @@ function getTwinsGame() {
         resolve( twinsGame.game_data_directory );
         return;
       }
-      twinsGame = {};
       mlb.getSchedule( date,
         function( err, schedule ){
           if ( err ) {
@@ -93,7 +92,7 @@ function scheduleNext() {
 }
 
 function tick() {
-  getTwinsGame.bind( this, twinsGame )()
+  getTwinsGame()
   .then( getNewPlays )
   .catch( function( err ) { console.log( err ); } )
   .then( scheduleNext );
