@@ -46,7 +46,6 @@ function getTwinsGame() {
 function getNewPlays( game_data_directory ) {
   return new Promise(
     function( resolve, reject ) {
-      console.log( 'using lastGUID: ', twinsGame.lastGUID );
       mlb.getGameEvents( game_data_directory, twinsGame.lastGUID, 
         function( err, events ) {
           if ( err ) {
@@ -63,7 +62,6 @@ function getNewPlays( game_data_directory ) {
           }
           if ( events.length > 0 ) {
             twinsGame.lastGUID = events[ events.length - 1 ].play_guid;
-            console.log( 'set lastGUID to: ', twinsGame.lastGUID );
           }
           resolve();
         }
