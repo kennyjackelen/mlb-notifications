@@ -107,6 +107,9 @@ Play.prototype.criteria = [
   {
     name: 'highLeverage',
     test: function() {
+            if ( this.game.status.ind === 'F' || this.game.status.ind === 'O' ) {
+              return false;
+            }
             return ( getLeverage( this.currentPlay ) >= 90 );
           }
   },
