@@ -33,4 +33,3 @@ gameday.on('message', (m) => {
     app.locals.logger.error( m.msg, m.detail );
   }
 });
-app.locals.logger.error( 'test error', {} );
