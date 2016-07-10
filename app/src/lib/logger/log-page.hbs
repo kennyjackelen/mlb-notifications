@@ -19,20 +19,35 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-json.min.js"></script>
 
+  <style>
+    .main {
+      max-width: 80%;
+      margin: 0 auto;
+    }
+    .time {
+      opacity: 0.7;
+      font-size: 70%;
+      line-height: 1em;
+      margin-bottom: 1em;
+    }
+  </style>
+
 </head>
 <body>
 
-  <ul class="collapsible" data-collapsible="accordion">
-    {{#each logs}}
-    <li>
-      <div class="collapsible-header">
-        <div>{{ msg }}</div>
-        <div>{{ time }}</div>
-      </div>
-      <div class="collapsible-body"><pre><code class="language-json">{{ detail }}</code></pre></div>
-    </li>
-    {{/each}}
-  </ul>
+  <div class="main">
+    <ul class="collapsible" data-collapsible="accordion">
+      {{#each logs}}
+      <li>
+        <div class="collapsible-header">
+          <p>{{ msg }}</p>
+          <p class="time">{{ time }}</p>
+        </div>
+        <div class="collapsible-body"><pre><code class="language-json">{{ detail }}</code></pre></div>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
 
 </body>
 </html>
