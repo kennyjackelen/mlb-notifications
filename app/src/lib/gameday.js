@@ -87,9 +87,12 @@ function digestOnePlay( currentPlay, previousPlay ) {
     database.find( conditions, function( err, subscriptions ) {
       for ( var i = 0; i < subscriptions.length; i++ ) {
         var subscription = subscriptions[ i ].subscription;
-        var payload = buildNotificationPayload( play );
+        var settings = subscriptions[ i ].settings;
+        var payload = buildNotificationPayload( play, settings );
+        if ( i === 0 ) {
+          log( payload.title, { payload: payload, play: play, eventTypes: play.getEventTypes() } );
+        }
         if ( process.env.LOG_ONLY ) {
-          console.log( { payload: payload, eventTypes: play.getEventTypes() } );
           continue;
         }
         payload.icon = './images/android-chrome-512x512.png';
@@ -99,52 +102,56 @@ function digestOnePlay( currentPlay, previousPlay ) {
   }
 }
 
-function buildNotificationPayload( play ) {
+function log( msg, detail ) {
+  process.send( { type: 'log', msg: msg, detail: detail } );
+}
+
+function buildNotificationPayload( play, settings ) {
   var eventTypes = play.getEventTypes();
-  if ( eventTypes.leadChange ) {
+  if ( eventTypes.leadChange && settings.leadChange ) {
     return {
       title: 'Lead Change: ' + getScoreString( play ),
       message: getInningString( play ) + '. ' + play.currentPlay.des
     };
   }
-  if ( eventTypes.runScored ) {
+  if ( eventTypes.runScored && settings.runScored ) {
     return {
       title: 'Run Scored: ' + getScoreString( play ),
       message: getInningString( play ) + '. ' + play.currentPlay.des
     };
   }
-  if ( eventTypes.homeRun ) {
+  if ( eventTypes.homeRun && settings.homeRun ) {
     return {
       title: 'Home Run: ' + getScoreString( play ),
       message: getInningString( play ) + '. ' + play.currentPlay.des
     };
   }
-  if ( eventTypes.bigWinprobChange ) {
+  if ( eventTypes.bigWinprobChange && settings.bigWinprobChange) {
     return {
       title: 'Big Play: ' + getScoreString( play ),
       message: getInningString( play ) + '. ' + play.currentPlay.des
     };
   }
-  if ( eventTypes.highLeverage ) {
+  if ( eventTypes.highLeverage && settings.highLeverage ) {
     return {
       title: 'High Leverage: ' + getScoreString( play ),
       message: getGameState( play )
     };
   }
-  if ( eventTypes.gameStart ) {
+  if ( eventTypes.gameStart && settings.gameStart ) {
     return {
       title: 'Game Started: ' + getScoreString( play )
     };
   }
-  if ( eventTypes.gameEnd ) {
+  if ( eventTypes.gameEnd && settings.gameEnd ) {
     return {
       title: 'Final: ' + getScoreString( play )
     };
   }
-  if ( eventTypes.noHitter ) {
+  if ( eventTypes.noHitter && settings.noHitter ) {
     return { };
   }
-  if ( eventTypes.halfInning ) {
+  if ( eventTypes.halfInning && settings.halfInning ) {
     return {
       title: getInningString( play ) + ': ' + getScoreString( play )
     };

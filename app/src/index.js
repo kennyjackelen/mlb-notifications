@@ -1,4 +1,4 @@
-/*jshint node:true*/
+/*jshint node:true,esnext:true*/
 'use strict';
 
 var express = require('express');
@@ -13,8 +13,6 @@ var router = express.Router();
 
 app.locals.database = require('./lib/database.js');
 app.locals.logger = require('./lib/logger/logger.js');
-app.locals.logger.info( 'logger started' );
-app.locals.logger.info( 'logger goes on' );
 
 // set up routes
 require('./routes')( router );
@@ -26,4 +24,9 @@ app.use( express.static( path.resolve( __dirname, 'app/dist') ) );
 // go baby go!
 app.listen( PORT );
 
-fork( path.resolve( __dirname, 'lib/gameday.js') );
+var gameday = fork( path.resolve( __dirname, 'lib/gameday.js') );
+gameday.on('message', (m) => {
+  if ( m.type === 'log' ) {
+    app.locals.logger.info( m.msg, m.detail );
+  }
+});
