@@ -88,6 +88,10 @@ function digestOnePlay( currentPlay, previousPlay ) {
       for ( var i = 0; i < subscriptions.length; i++ ) {
         var subscription = subscriptions[ i ].subscription;
         var payload = buildNotificationPayload( play );
+        if ( process.env.LOG_ONLY ) {
+          console.log( { payload: payload, eventTypes: play.getEventTypes() } );
+          continue;
+        }
         payload.icon = './images/android-chrome-512x512.png';
         notify( subscription, payload );
       }
@@ -166,9 +170,9 @@ function getBattingTeam( play ) {
   var reallyTop = play.currentPlay.isTop && Number( play.currentPlay.o ) !== 3;
   reallyTop = reallyTop || ( !play.currentPlay.isTop && Number( play.currentPlay.o ) === 3 );
   if ( reallyTop ) {
-    return twinsGame.game.away_name_name + ' batting';
+    return twinsGame.game.away_team_name + ' batting';
   }
-  return twinsGame.game.home_name_name + ' batting';
+  return twinsGame.game.home_team_name + ' batting';
 }
 
 function getGameState( play ) {

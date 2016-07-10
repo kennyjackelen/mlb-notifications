@@ -63,15 +63,13 @@ module.exports.getSchedule = function getSchedule( date, callback ) {
       try {
         schedule = JSON.parse( body ).data.games.game;
       } catch ( e ) {
-        console.log('error parsing response');
-        callback( true );
+        callback('error parsing response');
         return;
       }
-      callback( false, schedule );
+      callback( null, schedule );
     }
     else {
-      console.log('error retrieving gameday data: ' + error.toString() );
-      callback( true );
+      callback('error retrieving gameday data');
     }
   }
 
@@ -101,8 +99,7 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
           innings = [ innings ];
         }
       } catch ( e ) {
-        console.log('error parsing response');
-        callback( true );
+        callback('error parsing response');
         return;
       }
       for ( var i = 0; i < innings.length; i++ ) {
@@ -145,11 +142,10 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
           }
         }
       }
-      callback( false, plays );
+      callback( null, plays );
     }
     else {
-      console.log('error retrieving gameday data: ' + error.toString() );
-      callback( true );
+      callback('error retrieving gameday data: ');
     }
   }
 
