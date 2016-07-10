@@ -136,7 +136,7 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
             if ( addToArray ) {
               plays.push( atbat );
             }
-            if ( atbat.play_guid === lastNum ) {
+            if ( atbat.event_num === lastNum ) {
               addToArray = true;
             }
           }
