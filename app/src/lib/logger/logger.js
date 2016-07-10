@@ -58,7 +58,8 @@ function prepareLogForDisplay( log ) {
   return {
     msg: log.msg,
     time: timestampStr,
-    detail: JSON.stringify( log, null, 2 )
+    detail: JSON.stringify( log, null, 2 ),
+    level: log.level
   };
 }
 
