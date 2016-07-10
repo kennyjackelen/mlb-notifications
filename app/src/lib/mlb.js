@@ -75,7 +75,7 @@ module.exports.getSchedule = function getSchedule( date, callback ) {
 
 };
 
-module.exports.getGameEvents = function getGameEvents( game_data_directory, lastGUID, callback ) {
+module.exports.getGameEvents = function getGameEvents( game_data_directory, lastNum, callback ) {
 
   if ( typeof( game_data_directory ) === 'undefined' ) {
     callback( 'Must supply a game data directory.');
@@ -83,7 +83,7 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
   }
 
   var path = game_data_directory + '/game_events.json';
-  var addToArray = !Boolean( lastGUID );
+  var addToArray = !Boolean( lastNum );
 
   request( path, _digestGameEvents );
 
@@ -118,7 +118,7 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
             if ( addToArray ) {
               plays.push( atbat );
             }
-            if ( atbat.play_guid === lastGUID ) {
+            if ( atbat.num === lastNum ) {
               addToArray = true;
             }
           }
@@ -136,7 +136,7 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
             if ( addToArray ) {
               plays.push( atbat );
             }
-            if ( atbat.play_guid === lastGUID ) {
+            if ( atbat.play_guid === lastNum ) {
               addToArray = true;
             }
           }

@@ -46,11 +46,11 @@ function getTwinsGame() {
 function getNewPlays( game_data_directory ) {
   return new Promise(
     function( resolve, reject ) {
-      var lastGUID;
+      var lastNum;
       if ( twinsGame.lastPlay ) {
-        lastGUID = twinsGame.lastPlay.play_guid;
+        lastNum = twinsGame.lastPlay.num;
       }
-      mlb.getGameEvents( game_data_directory, lastGUID, 
+      mlb.getGameEvents( game_data_directory, lastNum, 
         function( err, events ) {
           if ( err ) {
             reject( err );
