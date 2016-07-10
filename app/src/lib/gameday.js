@@ -106,6 +106,10 @@ function log( msg, detail ) {
   process.send( { type: 'log', msg: msg, detail: detail } );
 }
 
+function logError( msg, detail ) {
+  process.send( { type: 'error', msg: msg, detail: detail } );
+}
+
 function buildNotificationPayload( play, settings ) {
   var eventTypes = play.getEventTypes();
   if ( eventTypes.leadChange && settings.leadChange ) {
@@ -258,7 +262,7 @@ function scheduleNext() {
 function tick() {
   getTwinsGame()
   .then( getNewPlays )
-  .catch( function( err ) { console.log( err ); } )
+  .catch( function( err ) { logError( err.msg, err ); } )
   .then( scheduleNext );
 }
 

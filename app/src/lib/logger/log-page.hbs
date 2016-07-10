@@ -30,6 +30,9 @@
       line-height: 1em;
       margin-bottom: 1em;
     }
+    .level-50 {
+      background-color: rgba(255, 0, 0, 0.3);
+    }
   </style>
 
 </head>
@@ -39,7 +42,7 @@
     <ul class="collapsible" data-collapsible="accordion">
       {{#each logs}}
       <li>
-        <div class="collapsible-header">
+        <div class="collapsible-header level-{{ detail.level }}">
           <p>{{ msg }}</p>
           <p class="time">{{ time }}</p>
         </div>

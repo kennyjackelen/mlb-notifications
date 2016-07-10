@@ -29,4 +29,8 @@ gameday.on('message', (m) => {
   if ( m.type === 'log' ) {
     app.locals.logger.info( m.msg, m.detail );
   }
+  if ( m.type === 'error' ) {
+    app.locals.logger.error( m.msg, m.detail );
+  }
 });
+app.locals.logger.error( 'test error', {} );
