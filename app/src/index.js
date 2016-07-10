@@ -13,6 +13,8 @@ var router = express.Router();
 
 app.locals.database = require('./lib/database.js');
 app.locals.logger = require('./lib/logger/logger.js');
+app.locals.logger.info( 'logger started' );
+app.locals.logger.info( 'logger goes on' );
 
 // set up routes
 require('./routes')( router );

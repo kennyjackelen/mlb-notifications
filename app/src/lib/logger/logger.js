@@ -41,7 +41,7 @@ Logger.prototype = {
             reject( error );
             return;
           }
-          var model = { app: app, logs: [] };
+          var model = { app: app, logs: this.getLogs() };
           var template = handlebars.compile( source );
           resolve( template( model ) );
         }
@@ -56,7 +56,8 @@ function prepareLogForDisplay( log ) {
   timestampStr += ' (' + timestamp.fromNow() + ')';
   return {
     msg: log.msg,
-    time: timestampStr
+    time: timestampStr,
+    detail: JSON.stringify( log, null, 2 )
   };
 }
 
