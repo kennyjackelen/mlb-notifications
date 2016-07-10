@@ -90,7 +90,7 @@ function digestOnePlay( currentPlay, previousPlay ) {
         var settings = subscriptions[ i ].settings;
         var payload = buildNotificationPayload( play, settings );
         if ( i === 0 ) {
-          log( payload.title, { payload: payload, play: play, eventTypes: play.getEventTypes() } );
+          log( payload.title, { payload: payload, eventTypes: play.getEventTypes(), play: play, twinsGame: twinsGame } );
         }
         if ( process.env.LOG_ONLY ) {
           continue;
