@@ -34,6 +34,7 @@ Logger.prototype = {
     return logs.map( prepareLogForDisplay );
   },
   getLogPage: function getLogPage( app ) {
+    var logs = this.getLogs();
     return new Promise( function( resolve, reject ) {
       fs.readFile( path.resolve( __dirname, 'log-page.hbs' ), 'utf-8',
         function( error, source ) {
@@ -41,7 +42,7 @@ Logger.prototype = {
             reject( error );
             return;
           }
-          var model = { app: app, logs: this.getLogs() };
+          var model = { app: app, logs: logs };
           var template = handlebars.compile( source );
           resolve( template( model ) );
         }
