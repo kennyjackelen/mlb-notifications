@@ -48,7 +48,7 @@ function getNewPlays( game_data_directory ) {
     function( resolve, reject ) {
       var lastNum;
       if ( twinsGame.lastPlay ) {
-        lastNum = twinsGame.lastPlay.num;
+        lastNum = twinsGame.lastPlay.event_num;
       }
       mlb.getGameEvents( game_data_directory, lastNum, 
         function( err, events ) {
