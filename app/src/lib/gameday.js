@@ -262,7 +262,7 @@ function scheduleNext() {
 function tick() {
   getTwinsGame()
   .then( getNewPlays )
-  .catch( function( err ) { logError( err.msg, err ); } )
+  .catch( function( err ) { logError( err.msg, { detail: err } ); } )
   .then( scheduleNext );
 }
 
