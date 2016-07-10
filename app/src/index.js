@@ -12,7 +12,7 @@ app.use( bodyParser.json() );
 var router = express.Router();
 
 app.locals.database = require('./lib/database.js');
-app.locals.database = require('./lib/logger/logger.js');
+app.locals.logger = require('./lib/logger/logger.js');
 
 // set up routes
 require('./routes')( router );
