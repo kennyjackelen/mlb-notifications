@@ -29,7 +29,7 @@ function getTwinsGame() {
           }
           for ( var i = 0; i < schedule.length; i++ ) {
             var game = schedule[ i ];
-            if ( game.away_name_abbrev === 'MIN' || game.home_name_abbrev === 'MIN' ) {
+            if ( game.away_name_abbrev === 'CIN' || game.home_name_abbrev === 'CIN' ) {
               twinsGame.date = date;
               twinsGame.game_data_directory = game.game_data_directory;
               twinsGame.game = game;
