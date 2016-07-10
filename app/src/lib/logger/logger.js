@@ -60,6 +60,4 @@ function prepareLogForDisplay( log ) {
   };
 }
 
-module.exports = function initialize(){
-  return new Logger();
-};
+module.exports = new Logger();
