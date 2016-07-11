@@ -23,7 +23,7 @@ var Logger = function() {
 
 Logger.prototype = {
   info: function info( msg, detail ) { this._log.info( detail, msg ); },
-  error: function error( msg ) { this._log.error( msg ); },
+  error: function error( msg, detail ) { this._log.error( detail, msg ); },
   getLogs: function getLogs() {
     var logs = [];
 
