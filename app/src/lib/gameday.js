@@ -96,6 +96,7 @@ function digestOnePlay( currentPlay, previousPlay ) {
           continue;
         }
         payload.icon = './images/android-chrome-512x512.png';
+        payload.badge = './images/favicon-32x32.png';
         notify( subscription, payload );
       }
     });
