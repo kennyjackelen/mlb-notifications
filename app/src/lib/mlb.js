@@ -131,7 +131,7 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
           }
           for ( j = 0; j < inning.bottom.atbat.length; j++ ) {
             atbat = inning.bottom.atbat[ j ];
-            atbat.inning = Number( inning.event_num );
+            atbat.inning = Number( inning.num );
             atbat.isTop = false;
             if ( addToArray ) {
               plays.push( atbat );
