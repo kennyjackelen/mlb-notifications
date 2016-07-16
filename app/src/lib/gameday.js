@@ -262,20 +262,21 @@ function getInningString( play ) {
 }
 
 function gameIsNotInProgress() {
+  var statusInd = twinsGame.game.status.ind;
   // Scheduled
-  if ( twinsGame.gameStatus.ind === 'S' ) {
+  if ( statusInd === 'S' ) {
     return true;
   }
   // Final
-  if ( twinsGame.gameStatus.ind === 'F' ) {
+  if ( statusInd === 'F' ) {
     return true;
   }
   // Game Over
-  if ( twinsGame.gameStatus.ind === 'O' ) {
+  if ( statusInd === 'O' ) {
     return true;
   }
   // Postponed
-  if ( twinsGame.gameStatus.ind.charAt( 0 ) === 'D' ) {
+  if ( statusInd.charAt( 0 ) === 'D' ) {
     return true;
   }
   return false;
