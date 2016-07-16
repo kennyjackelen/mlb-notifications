@@ -7,7 +7,8 @@ var Play = require('./play.js');
 var moment = require('moment-timezone');
 var notify = require('./notify.js');
 
-var TICK_INTERAL = 5000;  // Every 5 seconds
+var IN_GAME_TICK_INTERAL = 5 * 1000;  // Every 5 seconds
+var OUT_OF_GAME_TICK_INTERAL = 60 * 1000;  // Every minute
 
 var twinsGame = {};
 
@@ -47,6 +48,9 @@ function getNewPlays( game_data_directory ) {
   return new Promise(
     function( resolve, reject ) {
       var lastNum;
+      if ( gameIsNotInProgress() ) {
+        resolve();
+      }
       if ( twinsGame.lastPlay ) {
         lastNum = twinsGame.lastPlay.event_num;
       }
@@ -256,8 +260,33 @@ function getInningString( play ) {
   }
 }
 
+function gameIsNotInProgress() {
+  // Scheduled
+  if ( twinsGame.gameStatus.ind === 'S' ) {
+    return true;
+  }
+  // Final
+  if ( twinsGame.gameStatus.ind === 'F' ) {
+    return true;
+  }
+  // Game Over
+  if ( twinsGame.gameStatus.ind === 'O' ) {
+    return true;
+  }
+  // Postponed
+  if ( twinsGame.gameStatus.ind.charAt( 0 ) === 'D' ) {
+    return true;
+  }
+  return false;
+}
+
 function scheduleNext() {
-  setTimeout( tick, TICK_INTERAL );
+  if ( gameIsNotInProgress() ) {
+    setTimeout( tick, OUT_OF_GAME_TICK_INTERAL );
+  }
+  else {
+    setTimeout( tick, IN_GAME_TICK_INTERAL );
+  }
 }
 
 function tick() {
