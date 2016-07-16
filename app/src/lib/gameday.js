@@ -50,6 +50,7 @@ function getNewPlays( game_data_directory ) {
       var lastNum;
       if ( gameIsNotInProgress() ) {
         resolve();
+        return;
       }
       if ( twinsGame.lastPlay ) {
         lastNum = twinsGame.lastPlay.event_num;
