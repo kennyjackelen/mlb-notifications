@@ -63,7 +63,7 @@ module.exports.getSchedule = function getSchedule( date, callback ) {
       try {
         schedule = JSON.parse( body ).data.games.game;
       } catch ( e ) {
-        callback( { msg: '[getSchedule] error parsing response', body: body } );
+        callback( { msg: '[getSchedule] error parsing response', body: body, err: e } );
         return;
       }
       callback( null, schedule );
@@ -99,7 +99,7 @@ module.exports.getGameEvents = function getGameEvents( game_data_directory, last
           innings = [ innings ];
         }
       } catch ( e ) {
-        callback( { msg: '[getGameEvents] error parsing response', body: body } );
+        callback( { msg: '[getGameEvents] error parsing response', body: body, err: e } );
         return;
       }
       for ( var i = 0; i < innings.length; i++ ) {
