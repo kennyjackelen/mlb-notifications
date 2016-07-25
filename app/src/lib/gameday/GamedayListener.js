@@ -56,7 +56,7 @@ class GamedayListener {
 
   _filter( schedule ) {
     var teams = this.options.teams;
-    return new Promise.resolve(
+    return Promise.resolve(
       schedule.filter(
         game => {
           // Check if we care about either of the teams
