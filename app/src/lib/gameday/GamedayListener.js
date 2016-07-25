@@ -9,6 +9,8 @@ class GamedayListener {
     // available options:
     //  - teams: an array of team abbreviations
     //  - interval: how often to check for updates
+    //  - onNewPlay: callback for new plays
+    //  - onError: callback for errors
     this.options = {
       teams: [],
       interval: 5 * 1000
@@ -17,8 +19,12 @@ class GamedayListener {
     
     this._fetcher = new GamedayFetcher();
 
-    if ( typeof( this.options.callback ) === 'undefined' ) {
-      throw 'No callback defined';
+    if ( typeof( this.options.onNewPlay ) === 'undefined' ) {
+      throw 'No new play callback defined';
+    }
+
+    if ( typeof( this.options.onError ) === 'undefined' ) {
+      throw 'No error callback defined';
     }
   }
 
@@ -43,7 +49,9 @@ class GamedayListener {
     this._fetcher.getSchedule()
       .then( this._filter )
       .then( this._getPlays )
-      .then( this._notify );
+      .then( this._notify )
+      .catch( this.options.onError )
+      .then( this._scheduleNext );
   }
 
   _filter( schedule ) {
@@ -83,9 +91,13 @@ class GamedayListener {
     for ( var i = 0; i < games.length; i++ ) {
       plays = games[ i ];
       for ( var j = 0; j < plays.length; j++ ) {
-        this.options.callback( plays[ j ] );
+        this.options.onNewPlay( plays[ j ] );
       }
     }
+  }
+
+  _scheduleNext() {
+    this._timeout = setTimeout( this.tick.bind( this ), this.options.interval );
   }
 
 }

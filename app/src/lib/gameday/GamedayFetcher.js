@@ -126,9 +126,10 @@ class GamedayFetcher {
               reject( { msg: '[getPlays] error parsing response', body: body, err: e } );
               return;
             }
+            var atbat, prevAtbat;
             for ( var i = 0; i < innings.length; i++ ) {
               var inning = innings[ i ];
-              var j, atbat;
+              var j;
               if ( inning.top && inning.top.atbat ) {
                 // when it is the first atbat, this is an object, not an array
                 // make it into an array for consistency
@@ -140,11 +141,16 @@ class GamedayFetcher {
                   atbat.inning = Number( inning.num );
                   atbat.isTop = true;
                   if ( addToArray ) {
-                    plays.push( atbat );
+                    plays.push( {
+                      atbat: atbat,
+                      prevAtbat: prevAtbat,
+                      game: game
+                    } );
                   }
                   if ( atbat.event_num === lastEventNum ) {
                     addToArray = true;
                   }
+                  prevAtbat = atbat;
                 }
               }
               if ( inning.bottom && inning.bottom.atbat ) {
@@ -158,11 +164,16 @@ class GamedayFetcher {
                   atbat.inning = Number( inning.num );
                   atbat.isTop = false;
                   if ( addToArray ) {
-                    plays.push( { atbat: atbat, game: game } );
+                    plays.push( {
+                      atbat: atbat,
+                      prevAtbat: prevAtbat,
+                      game: game
+                    } );
                   }
                   if ( atbat.event_num === lastEventNum ) {
                     addToArray = true;
                   }
+                  prevAtbat = atbat;
                 }
               }
             }
