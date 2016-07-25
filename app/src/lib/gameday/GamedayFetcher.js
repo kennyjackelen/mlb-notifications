@@ -23,7 +23,8 @@ function _padToTwoDigits( integer ) {
 class GamedayFetcher {
 
   constructor() {
-    this._eTagMap = new WeakMap();
+    this._eTags = new WeakMap();
+    this._lastPlays = new WeakMap();
   }
 
   /* get the schedule of games for a given date */
@@ -46,7 +47,7 @@ class GamedayFetcher {
           uri: GAMEDAY_HOST + _getBasePath( date ) + 'master_scoreboard.json',
           json: true
         };
-      etag = this._eTagMap.get('schedule');
+      etag = this._eTags.get('schedule');
       if ( etag !== undefined ) {
         options.headers = { 'If-None-Match': etag };
       }
@@ -71,7 +72,7 @@ class GamedayFetcher {
             catch( e ) {
               reject( { msg: '[getSchedule] error parsing response', error: e, body: body } );
             }
-            this._eTagMap.set( 'schedule', response.getHeader('ETag') );
+            this._eTags.set( 'schedule', response.getHeader('ETag') );
             resolve( schedule );
           }
           else {
@@ -83,7 +84,7 @@ class GamedayFetcher {
     });
   }
 
-  getPlays( game, lastEventNum ) {
+  getPlays( game ) {
 
     return new Promise( function( resolve, reject ) {
       var options;
@@ -94,7 +95,7 @@ class GamedayFetcher {
           uri: GAMEDAY_HOST + game.game_data_directory + '/game_events.json',
           json: true
         };
-      etag = this._eTagMap.get( game.id );
+      etag = this._eTags.get( game.id );
       if ( etag !== undefined ) {
         options.headers = { 'If-None-Match': etag };
       }
@@ -108,8 +109,9 @@ class GamedayFetcher {
             return;
           }
           if ( !error && response.statusCode === 200 ) {
-            // if no last event number was supplied, we're getting all the events,
+            // if no last event number is found, we're getting all the events,
             // so send everything from the start
+            var lastEventNum = this._lastPlays.get( game.id );
             var addToArray = ( typeof lastEventNum === 'undefined' );
             var innings;
             var plays;
@@ -156,7 +158,7 @@ class GamedayFetcher {
                   atbat.inning = Number( inning.num );
                   atbat.isTop = false;
                   if ( addToArray ) {
-                    plays.push( atbat );
+                    plays.push( { atbat: atbat, game: game } );
                   }
                   if ( atbat.event_num === lastEventNum ) {
                     addToArray = true;
@@ -164,7 +166,10 @@ class GamedayFetcher {
                 }
               }
             }
-            this._eTagMap.set( game.id, response.getHeader('ETag') );
+            if ( plays.length > 0 ) {
+              this._lastPlays.set( game.id, plays[ plays.length - 1 ].atbat.event_num );
+            }
+            this._eTags.set( game.id, response.getHeader('ETag') );
             resolve( plays );
           }
           else {
