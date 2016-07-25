@@ -8,7 +8,7 @@ var notify = require('./notify.js');
 const GamedayListener = require('./gameday/GamedayListener.js');
 
 var options = {
-  teams: [ 'MIN' ],
+  teams: [ 'LAD' ],
   onNewPlay: playReceived,
   onError: logError
 };
