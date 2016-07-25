@@ -78,7 +78,7 @@ class GamedayFetcher {
           else {
             reject( { msg: '[getSchedule] request failed', error: error, response: response, body: body } );
           }
-        }
+        }.bind( this )
       );
 
     }.bind( this ));
@@ -186,7 +186,7 @@ class GamedayFetcher {
           else {
             reject( { msg: '[getPlays] request failed', error: error, response: response, body: body } );
           }
-        }
+        }.bind( this )
       );
 
     }.bind( this ));
