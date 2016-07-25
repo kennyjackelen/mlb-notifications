@@ -127,6 +127,7 @@ class GamedayFetcher {
               return;
             }
             var atbat, prevAtbat;
+            prevAtbat = null;
             for ( var i = 0; i < innings.length; i++ ) {
               var inning = innings[ i ];
               var j;
