@@ -114,7 +114,7 @@ class GamedayFetcher {
             var lastEventNum = this._lastPlays.get( game.id );
             var addToArray = ( typeof lastEventNum === 'undefined' );
             var innings;
-            var plays;
+            var plays = [];
             try {
               innings = body.data.game.inning;
               // when it is the first inning, this is an object, not an array
