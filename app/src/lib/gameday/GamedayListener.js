@@ -50,7 +50,7 @@ class GamedayListener {
       .then( this._filter )
       .then( this._getPlays )
       .then( this._notify )
-      .catch( this.options.onError )
+      .catch( e => { this.options.onError( e ); }  )
       .then( this._scheduleNext );
   }
 
@@ -83,7 +83,11 @@ class GamedayListener {
       this._isFirstRun = false;
       return Promise.resolve( [] );
     }
-    return Promise.all( games.map( this._fetcher.getPlays ) );
+    return Promise.all(
+      games.map(
+        game => { return this._fetcher.getPlays( game ); }
+      )
+    );
   }
 
   _notify( games ) {
