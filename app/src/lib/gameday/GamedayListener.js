@@ -55,12 +55,13 @@ class GamedayListener {
   }
 
   _filter( schedule ) {
+    var teams = this.options.teams;
     return new Promise.resolve(
       schedule.filter(
         game => {
           // Check if we care about either of the teams
-          if ( this.teams.indexOf( game.away_name_abbrev ) < 0  &&
-               this.teams.indexOf( game.home_name_abbrev ) < 0 ) {
+          if ( teams.indexOf( game.away_name_abbrev ) < 0  &&
+               teams.indexOf( game.home_name_abbrev ) < 0 ) {
             return false;
           }
           // Check if the game is in progress
