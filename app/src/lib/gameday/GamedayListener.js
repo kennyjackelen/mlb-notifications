@@ -78,10 +78,6 @@ class GamedayListener {
   }
 
   _getPlays( games ) {
-    if ( this._isFirstRun ) {
-      this._isFirstRun = false;
-      return Promise.resolve( [] );
-    }
     return Promise.all(
       games.map(
         game => { return this._fetcher.getPlays( game ); }
@@ -94,13 +90,18 @@ class GamedayListener {
     for ( var i = 0; i < games.length; i++ ) {
       plays = games[ i ];
       for ( var j = 0; j < plays.length; j++ ) {
-        this.options.onNewPlay( plays[ j ] );
+        if ( !this._isFirstRun ) {
+          this.options.onNewPlay( plays[ j ] );
+        }
       }
     }
     return Promise.resolve();
   }
 
   _scheduleNext() {
+    if ( this._isFirstRun ) {
+      this._isFirstRun = false;
+    }
     this._timeout = setTimeout( this.tick.bind( this ), this.options.interval );
   }
 
