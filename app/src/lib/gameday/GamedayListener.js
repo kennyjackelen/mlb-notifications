@@ -47,11 +47,11 @@ class GamedayListener {
   /* called each time we check for events */
   tick() {
     this._fetcher.getSchedule()
-      .then( this._filter )
-      .then( this._getPlays )
-      .then( this._notify )
+      .then( schedule => { return this._filter( schedule ); } )
+      .then( games => { return this._getPlays( games ); } )
+      .then( games => { return this._notify( games ); } )
       .catch( e => { this.options.onError( e ); }  )
-      .then( this._scheduleNext );
+      .then( () => { this._scheduleNext(); } );
   }
 
   _filter( schedule ) {
