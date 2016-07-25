@@ -55,27 +55,25 @@ class GamedayListener {
   }
 
   _filter( schedule ) {
-    return new Promise( function( resolve, reject ) {
-      resolve(
-        schedule.filter(
-          game => {
-            // Check if we care about either of the teams
-            if ( this.teams.indexOf( game.away_name_abbrev ) < 0  &&
-                 this.teams.indexOf( game.home_name_abbrev ) < 0 ) {
-              return false;
-            }
-            // Check if the game is in progress
-            // "Pre-Game", "Postponed", "Final", "Preview", "Delayed", "Game Over", "In Progress", "Warmup", "Manager Challenge"
-            if ( game.status.status !== 'In Progress' &&
-                 game.status.status !== 'Manager Challenge' &&
-                 game.status.status !== 'Game Over' ) {
-              return false;
-            }
-            return true;
+    return new Promise.resolve(
+      schedule.filter(
+        game => {
+          // Check if we care about either of the teams
+          if ( this.teams.indexOf( game.away_name_abbrev ) < 0  &&
+               this.teams.indexOf( game.home_name_abbrev ) < 0 ) {
+            return false;
           }
-        )
-      );
-    }.bind( this ));
+          // Check if the game is in progress
+          // "Pre-Game", "Postponed", "Final", "Preview", "Delayed", "Game Over", "In Progress", "Warmup", "Manager Challenge"
+          if ( game.status.status !== 'In Progress' &&
+               game.status.status !== 'Manager Challenge' &&
+               game.status.status !== 'Game Over' ) {
+            return false;
+          }
+          return true;
+        }
+      )
+    );
   }
 
   _getPlays( games ) {
