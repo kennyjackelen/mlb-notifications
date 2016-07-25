@@ -4,7 +4,7 @@
 const request = require('request');
 const moment = require('moment-timezone');
 
-const GAMEDAY_HOST = 'gd2.mlb.com';
+const GAMEDAY_HOST = 'http://gd2.mlb.com';
 
 function _getBasePath( date ) {
 
