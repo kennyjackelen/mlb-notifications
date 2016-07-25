@@ -30,7 +30,6 @@ gameday.on('message', (m) => {
     app.locals.logger.info( m.msg, m.detail );
   }
   if ( m.type === 'error' ) {
-    console.log( m );
     app.locals.logger.error( m.msg, m.detail );
   }
 });

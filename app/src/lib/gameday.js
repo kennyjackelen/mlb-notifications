@@ -45,6 +45,7 @@ function log( msg, detail ) {
 
 function logError( err ) {
   err.stack = ( new Error().stack );
+  console.log( err );
   process.send( { type: 'error', msg: err.msg, detail: err } );
 }
 
