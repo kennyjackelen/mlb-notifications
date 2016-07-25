@@ -178,8 +178,8 @@ class GamedayFetcher {
                 }
               }
             }
-            if ( plays.length > 0 ) {
-              this._lastPlays.set( game.id, plays[ plays.length - 1 ].atbat.event_num );
+            if ( prevAtbat !== null ) {
+              this._lastPlays.set( game.id, prevAtbat.event_num );
             }
             this._eTags.set( game.id, response.headers.ETag );
             resolve( plays );
