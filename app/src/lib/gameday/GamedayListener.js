@@ -27,6 +27,7 @@ class GamedayListener {
     if ( this._timeout ) {
       throw 'Already started.';
     }
+    this._isFirstRun = true;
     this.tick();
   }
 
@@ -70,6 +71,10 @@ class GamedayListener {
   }
 
   _getPlays( games ) {
+    if ( this._isFirstRun ) {
+      this._isFirstRun = false;
+      return Promise.resolve( [] );
+    }
     return Promise.all( games.map( this._fetcher.getPlays ) );
   }
 
