@@ -23,8 +23,8 @@ function _padToTwoDigits( integer ) {
 class GamedayFetcher {
 
   constructor() {
-    this._eTags = new WeakMap();
-    this._lastPlays = new WeakMap();
+    this._eTags = new Map();
+    this._lastPlays = new Map();
   }
 
   /* get the schedule of games for a given date */
