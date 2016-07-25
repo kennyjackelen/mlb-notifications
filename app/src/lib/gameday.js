@@ -1,92 +1,23 @@
-/*jshint node:true*/
+/*jshint node:true,esnext:true*/
 'use strict';
 
-var mlb = require('./mlb.js');
 var database = require('./database.js');
 var Play = require('./play.js');
-var moment = require('moment-timezone');
 var notify = require('./notify.js');
 
-var IN_GAME_TICK_INTERAL = 5 * 1000;  // Every 5 seconds
-var OUT_OF_GAME_TICK_INTERAL = 60 * 1000;  // Every minute
+const GamedayListener = require('./gameday/GamedayListener.js');
 
-var twinsGame = {};
+var options = {
+  teams: [ 'MIN' ],
+  onNewPlay: playReceived,
+  onError: logError
+};
 
-// will be set to false after the first run
-var suppressNotify = true;
+var listener = new GamedayListener( options );
+listener.start();
 
-function getTwinsGame() {
-  return new Promise( 
-    function( resolve, reject ) {
-      // Use yesterday's games until 7am Central Time (for games that span midnight)
-      var m = moment().tz('America/Chicago').subtract( 7, 'hours');
-      var date = new Date( m.year(), m.month(), m.date() );
-
-      mlb.getSchedule( date,
-        function( err, schedule ){
-          if ( err ) {
-            reject( err );
-            return;
-          }
-          for ( var i = 0; i < schedule.length; i++ ) {
-            var game = schedule[ i ];
-            if ( game.away_name_abbrev === 'MIN' || game.home_name_abbrev === 'MIN' ) {
-              twinsGame.date = date;
-              twinsGame.game_data_directory = game.game_data_directory;
-              twinsGame.game = game;
-              resolve( game.game_data_directory );
-              break;
-            }
-          }
-        }
-      );
-    }
-  );
-}
-
-function getNewPlays( game_data_directory ) {
-  return new Promise(
-    function( resolve, reject ) {
-      var lastNum;
-      if ( gameIsNotInProgress() ) {
-        resolve();
-        return;
-      }
-      if ( twinsGame.lastPlay ) {
-        lastNum = twinsGame.lastPlay.event_num;
-      }
-      mlb.getGameEvents( game_data_directory, lastNum, 
-        function( err, events ) {
-          if ( err ) {
-            reject( err );
-            return;
-          }
-          if ( !suppressNotify ) {
-            for ( var i = 0; i < events.length; i++ ) {
-              if ( i > 0 ) {
-                digestOnePlay( events[ i ], events[ i - 1 ] );
-              }
-              else if ( twinsGame.lastPlay ) {
-                digestOnePlay( events[ i ], twinsGame.lastPlay );
-              }
-              else {
-                digestOnePlay( events[ i ], null );
-              }
-            }
-          }
-          suppressNotify = false;
-          if ( events.length > 0 ) {
-            twinsGame.lastPlay = events[ events.length - 1 ];
-          }
-          resolve();
-        }
-      );
-    }
-  );
-}
-
-function digestOnePlay( currentPlay, previousPlay ) {
-  var play = new Play( currentPlay, previousPlay, twinsGame.game );
+function playReceived( newPlay ) {
+  var play = new Play( newPlay.atbat, newPlay.prevAtbat, newPlay.game );
   var conditions = play.getConditions();
   if ( conditions.$or.length > 0 ) {
     database.find( conditions, function( err, subscriptions ) {
@@ -95,7 +26,7 @@ function digestOnePlay( currentPlay, previousPlay ) {
         var settings = subscriptions[ i ].settings;
         var payload = buildNotificationPayload( play, settings );
         if ( i === 0 ) {
-          log( payload.title, { payload: payload, eventTypes: play.getEventTypes(), play: play, twinsGame: twinsGame } );
+          log( payload.title, { payload: payload, eventTypes: play.getEventTypes(), play: play } );
         }
         if ( process.env.LOG_ONLY ) {
           continue;
@@ -112,8 +43,8 @@ function log( msg, detail ) {
   process.send( { type: 'log', msg: msg, detail: detail } );
 }
 
-function logError( msg, detail ) {
-  process.send( { type: 'error', msg: msg, detail: detail } );
+function logError( err ) {
+  process.send( { type: 'error', msg: err.msg, detail: err } );
 }
 
 function buildNotificationPayload( play, settings ) {
@@ -175,8 +106,8 @@ function buildNotificationPayload( play, settings ) {
 function getScoreString( play ) {
   var home_team_runs = Number( play.currentPlay.home_team_runs );
   var away_team_runs = Number( play.currentPlay.away_team_runs );
-  var home_string = twinsGame.game.home_name_abbrev + ' ' + home_team_runs;
-  var away_string = twinsGame.game.away_name_abbrev + ' ' + away_team_runs;
+  var home_string = play.game.home_name_abbrev + ' ' + home_team_runs;
+  var away_string = play.game.away_name_abbrev + ' ' + away_team_runs;
   if ( home_team_runs > away_team_runs ) {
     return home_string + ', ' + away_string;
   }
@@ -187,9 +118,9 @@ function getBattingTeam( play ) {
   var reallyTop = play.currentPlay.isTop && Number( play.currentPlay.o ) !== 3;
   reallyTop = reallyTop || ( !play.currentPlay.isTop && Number( play.currentPlay.o ) === 3 );
   if ( reallyTop ) {
-    return twinsGame.game.away_team_name + ' batting';
+    return play.game.away_team_name + ' batting';
   }
-  return twinsGame.game.home_team_name + ' batting';
+  return play.game.home_team_name + ' batting';
 }
 
 function getGameState( play ) {
@@ -236,7 +167,7 @@ function getBaserunnerState( play ) {
 }
 
 function getInningString( play ) {
-  var gameStatus = twinsGame.game.status;
+  var gameStatus = play.game.status;
   if ( gameStatus.ind === 'F' || gameStatus.ind === 'O' ) {
     if ( Number( gameStatus.inning ) > 9 ) {
       return 'Final (' + gameStatus.inning + ')';
@@ -260,42 +191,3 @@ function getInningString( play ) {
     }
   }
 }
-
-function gameIsNotInProgress() {
-  var statusInd = twinsGame.game.status.ind;
-  // Scheduled
-  if ( statusInd === 'S' ) {
-    return true;
-  }
-  // Final
-  if ( statusInd === 'F' ) {
-    return true;
-  }
-  // Game Over
-  if ( statusInd === 'O' ) {
-    return true;
-  }
-  // Postponed
-  if ( statusInd.charAt( 0 ) === 'D' ) {
-    return true;
-  }
-  return false;
-}
-
-function scheduleNext() {
-  if ( gameIsNotInProgress() ) {
-    setTimeout( tick, OUT_OF_GAME_TICK_INTERAL );
-  }
-  else {
-    setTimeout( tick, IN_GAME_TICK_INTERAL );
-  }
-}
-
-function tick() {
-  getTwinsGame()
-  .then( getNewPlays )
-  .catch( function( err ) { logError( err.msg, { detail: err } ); } )
-  .then( scheduleNext );
-}
-
-tick();
