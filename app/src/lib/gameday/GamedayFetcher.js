@@ -72,7 +72,7 @@ class GamedayFetcher {
             catch( e ) {
               reject( { msg: '[getSchedule] error parsing response', error: e, body: body } );
             }
-            this._eTags.set( 'schedule', response.getHeader('ETag') );
+            this._eTags.set( 'schedule', response.headers.ETag );
             resolve( schedule );
           }
           else {
