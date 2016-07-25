@@ -81,7 +81,7 @@ class GamedayFetcher {
         }
       );
 
-    });
+    }.bind( this ));
   }
 
   getPlays( game ) {
@@ -189,7 +189,7 @@ class GamedayFetcher {
         }
       );
 
-    });
+    }.bind( this ));
 
   }
 

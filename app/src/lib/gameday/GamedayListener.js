@@ -75,7 +75,7 @@ class GamedayListener {
           }
         )
       );
-    });
+    }.bind( this ));
   }
 
   _getPlays( games ) {
