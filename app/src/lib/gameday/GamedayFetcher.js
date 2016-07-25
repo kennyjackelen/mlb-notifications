@@ -13,7 +13,7 @@ function _getBasePath( date ) {
   m = _padToTwoDigits( date.getMonth() + 1 );
   d = _padToTwoDigits( date.getDate() );
 
-  return `/components/game/mlb/year_${ y }/month_${ m }_/day_${ d }/`;
+  return `/components/game/mlb/year_${ y }/month_${ m }/day_${ d }/`;
 }
 
 function _padToTwoDigits( integer ) {
