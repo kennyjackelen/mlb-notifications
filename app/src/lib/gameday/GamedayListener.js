@@ -94,6 +94,7 @@ class GamedayListener {
         this.options.onNewPlay( plays[ j ] );
       }
     }
+    return Promise.resolve();
   }
 
   _scheduleNext() {
