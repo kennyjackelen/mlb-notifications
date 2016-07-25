@@ -44,7 +44,7 @@ function log( msg, detail ) {
 }
 
 function logError( err ) {
-  process.send( { type: 'error', msg: err.msg, detail: err } );
+  process.send( { type: 'error', msg: err.msg, detail: err, stack: ( new Error().stack ) } );
 }
 
 function buildNotificationPayload( play, settings ) {
