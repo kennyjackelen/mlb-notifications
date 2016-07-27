@@ -49,6 +49,7 @@ class GamedayFetcher {
         };
       etag = this._eTags.get('schedule');
       if ( etag !== undefined ) {
+        console.log( 'using etag: ' + etag );
         options.headers = { 'If-None-Match': etag };
       }
       request(
@@ -56,6 +57,7 @@ class GamedayFetcher {
         function ( error, response, body ) {
           if ( !error && response.statusCode === 304 ) {
             // Not modified - return no games
+            console.log( '304 not modified' );
             resolve( [] );
             return;
           }
@@ -72,8 +74,7 @@ class GamedayFetcher {
             catch( e ) {
               reject( { msg: '[getSchedule] error parsing response', error: e, body: body } );
             }
-            this._eTags.set( 'schedule', response.headers.ETag );
-            console.log( response.headers );
+            this._eTags.set( 'schedule', response.headers.etag );
             resolve( schedule );
           }
           else {
@@ -182,7 +183,7 @@ class GamedayFetcher {
             if ( prevAtbat !== null ) {
               this._lastPlays.set( game.id, prevAtbat.event_num );
             }
-            this._eTags.set( game.id, response.headers.ETag );
+            this._eTags.set( game.id, response.headers.etag );
             resolve( plays );
           }
           else {
