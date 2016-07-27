@@ -73,6 +73,7 @@ class GamedayFetcher {
               reject( { msg: '[getSchedule] error parsing response', error: e, body: body } );
             }
             this._eTags.set( 'schedule', response.headers.ETag );
+            console.log( response.headers );
             resolve( schedule );
           }
           else {
