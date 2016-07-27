@@ -49,7 +49,6 @@ class GamedayFetcher {
         };
       etag = this._eTags.get('schedule');
       if ( etag !== undefined ) {
-        console.log( 'using etag: ' + etag );
         options.headers = { 'If-None-Match': etag };
       }
       request(
@@ -57,7 +56,6 @@ class GamedayFetcher {
         function ( error, response, body ) {
           if ( !error && response.statusCode === 304 ) {
             // Not modified - return no games
-            console.log( '304 not modified' );
             resolve( [] );
             return;
           }
