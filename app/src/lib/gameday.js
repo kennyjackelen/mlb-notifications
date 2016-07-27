@@ -32,7 +32,7 @@ function playReceived( newPlay ) {
           continue;
         }
         payload.icon = './images/android-chrome-512x512.png';
-        payload.badge = './images/favicon-32x32.png';
+        payload.badge = './images/badge-144x144.png';
         notify( subscription, payload );
       }
     });
