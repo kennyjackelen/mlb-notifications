@@ -25,24 +25,18 @@ function playReceived( newPlay ) {
         var subscription = subscriptions[ i ].subscription;
         var settings = subscriptions[ i ].settings;
         var payload = buildNotificationPayload( play, settings );
+        payload.icon = './images/android-chrome-512x512.png';
+        payload.badge = './images/badge-144x144.png';
         if ( i === 0 ) {
           log( payload.title, { payload: payload, eventTypes: play.getEventTypes(), play: play } );
         }
         if ( process.env.LOG_ONLY ) {
           continue;
         }
-        payload.tag = 'kennyjackelen.com/mlb-' + hash( payload.title + payload.message );
-        payload.icon = './images/android-chrome-512x512.png';
-        payload.badge = './images/badge-144x144.png';
         notify( subscription, payload );
       }
     });
   }
-}
-
-function hash( str ) {
-  // https://stackoverflow.com/a/34842797
-  return str.split('').reduce((prevHash, currVal) => ((prevHash << 5) - prevHash) + currVal.charCodeAt(0), 0);  // jshint ignore:line
 }
 
 function log( msg, detail ) {
