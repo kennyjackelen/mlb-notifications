@@ -1,7 +1,7 @@
 /*jshint node:true,esnext:true*/
 'use strict';
 
-const GamedayUtilities = require('./gameday/GamedayUtilities.js');
+const GamedayUtilities = require('../lib/gameday/GamedayUtilities.js');
 
 module.exports = function( router ) {
   
