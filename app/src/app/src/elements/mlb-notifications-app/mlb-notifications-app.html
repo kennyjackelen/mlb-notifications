@@ -133,7 +133,8 @@
         this.$$('notification-settings').errorMessage = error.detail;
       },
 
-      settingsChanged: function settingsChanged() {
+      settingsChanged: function settingsChanged( changeRecord ) {
+        console.log( changeRecord );
         this.syncToServer();
       },
 
