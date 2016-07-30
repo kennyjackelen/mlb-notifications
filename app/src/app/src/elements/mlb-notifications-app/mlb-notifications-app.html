@@ -134,14 +134,16 @@
       },
 
       settingsChanged: function settingsChanged( changeRecord ) {
-        if ( changeRecord.path === 'settings.notTodayFlag' ) {
-          if ( changeRecord.value === true ) {
-            this._getToday();
+        if ( changeRecord ) {
+          if ( changeRecord.path === 'settings.notTodayFlag' ) {
+            if ( changeRecord.value === true ) {
+              this._getToday();
+              return;
+            }
+            else {
+              this.settings.notToday = null;
+            }
           }
-          else {
-            this.settings.notToday = null;
-          }
-          return;
         }
         this.syncToServer();
       },
@@ -195,6 +197,7 @@
           if ( xhr.status >= 200 && xhr.status < 400 ) {
             var data = JSON.parse( xhr.responseText );
             this.settings.notToday = data.today;
+            this.syncToServer();
           }
         }.bind( this );
         xhr.send();
