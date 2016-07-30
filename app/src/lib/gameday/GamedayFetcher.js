@@ -2,7 +2,7 @@
 'use strict';
 
 const request = require('request');
-const moment = require('moment-timezone');
+const GamedayUtilities = require('./GamedayUtilities.js');
 
 const GAMEDAY_HOST = 'http://gd2.mlb.com';
 
@@ -37,9 +37,7 @@ class GamedayFetcher {
 
       // default to today's schedule
       if ( typeof( date ) === 'undefined' ) {
-        // Use yesterday's games until 7am Central Time (for games that span midnight)
-        var m = moment().tz('America/Chicago').subtract( 7, 'hours');
-        date = new Date( m.year(), m.month(), m.date() );
+        date = GamedayUtilities.today();
       }
 
       options = {

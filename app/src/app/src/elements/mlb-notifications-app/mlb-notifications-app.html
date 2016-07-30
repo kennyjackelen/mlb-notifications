@@ -134,7 +134,15 @@
       },
 
       settingsChanged: function settingsChanged( changeRecord ) {
-        console.log( changeRecord );
+        if ( changeRecord.path === 'settings.notTodayFlag' ) {
+          if ( changeRecord.value === true ) {
+            this._getToday();
+          }
+          else {
+            this.settings.notToday = null;
+          }
+          return;
+        }
         this.syncToServer();
       },
 
@@ -174,6 +182,22 @@
 
         console.log( 'Payload to server: ', payload );
         this.$.syncToast.open();
+      },
+
+      _getToday: function _getToday() {
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('GET', './today');
+        xhr.onerror = function() {
+          console.log('Couldn\'t retrieve current date from server.');
+        };
+        xhr.onload = function() {
+          if ( xhr.status >= 200 && xhr.status < 400 ) {
+            var data = JSON.parse( xhr.responseText );
+            this.settings.notToday = data.today;
+          }
+        }.bind( this );
+        xhr.send();
       }
 
     });

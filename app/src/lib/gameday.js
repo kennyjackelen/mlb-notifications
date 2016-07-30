@@ -6,6 +6,7 @@ var Play = require('./play.js');
 var notify = require('./notify.js');
 
 const GamedayListener = require('./gameday/GamedayListener.js');
+const GamedayUtilities = require('./gameday/GamedayUtilities.js');
 
 var options = {
   teams: [ 'MIN' ],
@@ -27,13 +28,24 @@ function playReceived( newPlay ) {
         var payload = buildNotificationPayload( play, settings );
         payload.icon = './images/android-chrome-512x512.png';
         payload.badge = './images/badge-144x144.png';
+        if ( settings.silent ) {
+          payload.silent = true;
+        }
         if ( i === 0 ) {
           log( payload.title, { payload: payload, eventTypes: play.getEventTypes(), play: play } );
+        }
+        if ( settings.notToday === GamedayUtilities.today() ) {
+          continue;
         }
         if ( process.env.LOG_ONLY ) {
           continue;
         }
-        notify( subscription, payload );
+        if ( settings.delay ) {
+          setTimeout( 60 * 1000, () => { notify( subscription, payload ); } );
+        }
+        else {
+          notify( subscription, payload );
+        }
       }
     });
   }

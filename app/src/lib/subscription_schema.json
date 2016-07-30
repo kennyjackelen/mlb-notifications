@@ -16,6 +16,9 @@
       "homeRun": "Boolean",
       "highLeverage": "Boolean",
       "bigWinprobChange": "Boolean",
-      "noHitter": "Boolean"
+      "noHitter": "Boolean",
+      "delay": "Boolean",
+      "silent": "Boolean",
+      "notToday": "Date"
     }
 }

@@ -88,7 +88,7 @@
     </ul>
     <div class="nodisp">
     <h2>Spoiler Protection</h2>
-    <ul>
+    <ul class="option-list">
       <li>
         <paper-checkbox id="silent" checked="{{settings.silent}}" disabled="{{!settings.turnedOn}}">
           Silent
@@ -106,7 +106,7 @@
         </paper-checkbox>
       </li>
       <li>
-        <paper-checkbox id="not-today" checked="{{settings.notToday}}" disabled="{{!settings.turnedOn}}">
+        <paper-checkbox id="not-today" checked="{{settings.notTodayFlag}}" disabled="{{!settings.turnedOn}}">
           Not Today
           <span class="subtitle">
             You will not receive notifications for today's game. Notifications will resume tomorrow.
