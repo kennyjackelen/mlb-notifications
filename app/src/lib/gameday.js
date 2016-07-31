@@ -34,7 +34,7 @@ function playReceived( newPlay ) {
         if ( i === 0 ) {
           log( payload.title, { payload: payload, eventTypes: play.getEventTypes(), play: play } );
         }
-        if ( settings.notToday === GamedayUtilities.today() ) {
+        if ( Date( settings.notToday ) === Date( GamedayUtilities.today() ) ) {
           continue;
         }
         if ( settings.notToday ) {
