@@ -38,7 +38,7 @@ function playReceived( newPlay ) {
           continue;
         }
         if ( settings.notToday ) {
-          logError( 'Not Today Mismatch', { settings: settings.notToday, gamedayUtils: GamedayUtilities.today() } );
+          logError( { msg: 'Not Today Mismatch', settings: settings.notToday, gamedayUtils: GamedayUtilities.today() } );
         }
         if ( process.env.LOG_ONLY ) {
           continue;
