@@ -44,7 +44,7 @@ function playReceived( newPlay ) {
           continue;
         }
         if ( settings.delay ) {
-          setTimeout( 60 * 1000, () => { notify( subscription, payload ); } );
+          setTimeout( () => { notify( subscription, payload ); }, 60 * 1000 );
         }
         else {
           notify( subscription, payload );
